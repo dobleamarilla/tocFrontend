@@ -45,70 +45,64 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, onMounted, computed, ref} from 'vue';
+<script>
+import { onMounted, computed, ref} from 'vue';
 import {useStore} from "vuex";
-
 import axios from "axios";
-      
-export default defineComponent({
-  name: 'ModalTecladoPeso',
-  setup(){
-    const store = useStore();
-    var unidades = ref('0');
-    var infoArticulo = ref({
-      precioConIva: 0
-    });
-    var idBoton = null;
-    var getUnidades = computed(()=> {
-      let valor = parseInt(unidades.value);
-      if(!isNaN(valor))
-      {
-          return valor;
-      }
-      else
-      {
-          return 0;
-      }
-    });
-    var getPrecio = computed(()=> {
-      return ((Number(unidades.value)/1000)*infoArticulo.value.precioConIva).toFixed(2);
-    });
-    // function abrirModal(idArticulo: number, idBoton: number){
-    //   infoArticulo.value = ipcRenderer.sendSync('get-info-articulo', idArticulo);
-    //   idBoton = idBoton;
-    //   $('#modalPeso').modal();
-    // }
 
-    function agregarTecla(x: number){
-      unidades.value += String(x);
-    }
-    function eliminarTecla(){
-      unidades.value = unidades.value.slice(0, -1);
-    }
-    function confirmar(){
-      // toc.addItem(this.infoArticulo._id, this.idBoton, true, {precioAplicado: Number(this.getPrecio), infoArticulo: this.infoArticulo});
-      store.dispatch("modalPeso/cerrarModal");
-      unidades.value = '0';
-    }
+export default {
+    name: 'ModalPeso',
+    setup() {
+        const store = useStore();
+        var unidades = ref('0');
+        var infoArticulo = ref({
+        precioConIva: 0
+        });
+        var idBoton = null;
+        var getUnidades = computed(()=> {
+        let valor = parseInt(unidades.value);
+        if(!isNaN(valor))
+        {
+            return valor;
+        }
+        else
+        {
+            return 0;
+        }
+        });
+        var getPrecio = computed(()=> {
+        return ((Number(unidades.value)/1000)*infoArticulo.value.precioConIva).toFixed(2);
+        });
+        // function abrirModal(idArticulo: number, idBoton: number){
+        //   infoArticulo.value = ipcRenderer.sendSync('get-info-articulo', idArticulo);
+        //   idBoton = idBoton;
+        //   $('#modalPeso').modal();
+        // }
 
-    onMounted(()=>{
-      store.dispatch("modalPeso/setModal");
-    });
+        function agregarTecla(x){
+        unidades.value += String(x);
+        }
+        function eliminarTecla(){
+        unidades.value = unidades.value.slice(0, -1);
+        }
+        function confirmar(){
+        // toc.addItem(this.infoArticulo._id, this.idBoton, true, {precioAplicado: Number(this.getPrecio), infoArticulo: this.infoArticulo});
+        store.dispatch("ModalPeso/cerrarModal");
+        unidades.value = '0';
+        }
 
-    return {
-        confirmar, 
-        eliminarTecla, 
-        agregarTecla,
-        getPrecio,
-        getUnidades
-      }
-    /* FINAL SETUP */
-  }
-});
+        onMounted(()=>{
+        store.dispatch("ModalPeso/setModal");
+        });
+
+        return {
+            confirmar, 
+            eliminarTecla, 
+            agregarTecla,
+            getPrecio,
+            getUnidades
+        }
+        /* FINAL SETUP */
+    }
+}
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
-</style>

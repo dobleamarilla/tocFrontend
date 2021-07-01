@@ -48,13 +48,13 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent, computed } from 'vue'
 import axios from "axios";
-export default defineComponent({
-    name: 'PanelInferior',
+export default {
+    name: 'Footer',
     setup() {
-        var cesta = {_id: -1, lista: [] as any};
+        var cesta = {_id: -1, lista: []};
         var activo = null;
         var conCliente = null;
         var puntosClienteActivo = 0;
@@ -86,7 +86,7 @@ export default defineComponent({
         
         return {getTotal, listaAlReves, conCliente};
     }
-})
+}
 </script>
 
 <style scoped>

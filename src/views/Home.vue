@@ -1,26 +1,27 @@
 <template>
   <div>
-    <TeclasArticulos/>
-    <ModalTecladoPeso/>
-    <PanelInferior/>
-    <ModalInstallWizard/>
+    <Teclas/>
+    <ModalPeso/>
+    <Footer/>
+    <InstallWizard/>
   </div>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue';
-import TeclasArticulos from '@/components/TeclasArticulos.vue'; // @ is an alias to /src
-import ModalTecladoPeso from '@/components/ModalTecladoPeso.vue'; // @ is an alias to /src
-import PanelInferior from '@/components/PanelInferior.vue'; // @ is an alias to /src
-import ModalInstallWizard from '@/components/InstallWizard.vue'; // @ is an alias to /src
+
+<script>
+// @ is an alias to /src
+import Teclas from '@/components/Teclas.vue'; // @ is an alias to /src
+import ModalPeso from '@/components/ModalPeso.vue'; // @ is an alias to /src
+import Footer from '@/components/Footer.vue'; // @ is an alias to /src
+import InstallWizard from '@/components/InstallWizard.vue'; // @ is an alias to /src
 
 
-export default defineComponent({
+export default {
   name: 'Home',
   components: {
-    TeclasArticulos,
-    ModalTecladoPeso,
-    PanelInferior,
-    ModalInstallWizard
+    Teclas,
+    ModalPeso,
+    Footer,
+    InstallWizard
   },
-});
+};
 </script>
