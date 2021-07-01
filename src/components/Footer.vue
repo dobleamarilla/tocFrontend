@@ -11,7 +11,7 @@
             </tr>
           </thead>
           <tbody class="tableBody" :style="conCliente">
-            <tr v-for="(item, index) of listaAlReves"
+            <tr v-for="(item, index) of cesta.lista.reverse()"
             :key="index"
             v-bind:class="{
               'estiloPromo': item.promocion.esPromo,
@@ -51,45 +51,69 @@
 </template>
 
 <script>
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 
 import axios from 'axios';
+
+import { useStore } from 'vuex';
 
 export default {
   name: 'Footer',
   setup() {
-    let cesta = {
-      _id: -1,
-      lista: [],
-    };
-    // var activo = null;
+    const store = useStore();
+    const cesta = computed(() => store.state.Cesta.cesta);
+    let activo = null;
+    activo = null;
     const conCliente = null;
-    // var puntosClienteActivo = 0;
+    // const puntosClienteActivo = 0;
     const lineaDeRegalo = null;
     // var prohibirBuscarArticulos = true;
-    const listaAlReves = computed(() => [...cesta.lista].reverse());
+    // const listaAlReves = computed(() => cesta.value.reverse());
     const getTotal = computed(() => {
       let suma = 0;
-      for (let i = 0; i < cesta.lista.length; i += 1) {
+      for (let i = 0; i < cesta.value.lista.length; i += 1) {
         if (i !== lineaDeRegalo) {
-          suma += cesta.lista[i].subtotal;
+          suma += cesta.value.lista[i].subtotal;
         }
       }
       return suma.toFixed(2);
     });
-    function setCesta(cestaFromBackend) {
-      cesta = cestaFromBackend;
-    }
 
-    /* INICIALIZACIÓN DE CESTA */
-    axios.post('/getCesta').then((res) => {
-      setCesta(res.data);
+    // onBeforeMount(() => {
+    //   axios.post('/getCesta').then((res) => {
+    //     store.dispatch('Cesta/setCestaAction', res);
+    //   });
+    // });
+
+    onMounted(() => {
+      /* INICIALIZACIÓN DE CESTA */
+      axios.post('/getCesta').then((res) => {
+        store.dispatch('Cesta/setCestaAction', res.data);
+      });
     });
 
+    function sePuedeRegalar(subtotal, esPromo) {
+      if (subtotal > 0 && esPromo === true) { // Caso para que compile
+
+      }
+      return false;
+      // if (!esPromo) {
+      //   axios.post('convertirPuntosEnDinero', { puntosClienteActivo }).then((dinero) => {
+      //     // Aquí debe ir el nuevo método
+      //   });
+      //   if (subtotal <= dinero) {
+      //     return true;
+      //   }
+      //   return false;
+      // }
+      // return false;
+    }
     return {
       getTotal,
-      listaAlReves,
       conCliente,
+      cesta,
+      sePuedeRegalar,
+      activo,
     };
   },
 };

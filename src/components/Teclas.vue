@@ -446,7 +446,7 @@ export default {
                 infoPeso: null,
               }).then((res2) => {
                 if (res2.data.error === false && res2.data.bloqueado === false) {
-                  console.log('CESTA OK: ', res2.data.cesta);
+                  store.dispatch('Cesta/setCestaAction', res2.data.cesta);
                 } else {
                   console.log('Error en clickTeclaArticulo');
                 }

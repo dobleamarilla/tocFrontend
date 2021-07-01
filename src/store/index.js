@@ -4,6 +4,8 @@ import InstallWizard from './modules/InstallWizard';
 
 import ModalPeso from './modules/ModalPeso';
 
+import Cesta from './modules/Cesta';
+
 export default createStore({
   state: {
   },
@@ -14,5 +16,6 @@ export default createStore({
   modules: {
     InstallWizard,
     ModalPeso,
+    Cesta,
   },
 });
