@@ -27,7 +27,7 @@
         *width: 100%;
       }
     }
-    
+
     @media (min-width: 992px) {
       .seven-cols .col-md-1,
       .seven-cols .col-sm-1,
@@ -38,7 +38,7 @@
     flex:none !important;
       }
     }
-    
+
     @media (min-width: 1200px) {
       .seven-cols .col-md-1,
       .seven-cols .col-sm-1,
@@ -158,11 +158,11 @@
   .btn_fc {
       width: 7vw;
   }
-  .btn-group { 
-          width: 45% !important;
-          margin: 0 auto !important;
+  .btn-group {
+    width: 45% !important;
+    margin: 0 auto !important;
   }
-  /* MODAL DERECHA */ 
+  /* MODAL DERECHA */
   /*******************************
   * MODAL AS LEFT/RIGHT SIDEBAR
   * Add "left" or "right" in modal parent div, after class="modal".
@@ -203,7 +203,7 @@
   .modal.left.fade.in .modal-dialog{
       left: 0;
   }
-      
+
   /*Right*/
   .modal.right.fade .modal-dialog {
       right: -320px;
@@ -221,9 +221,8 @@
   {
       background-color: #FFFFFF;
   }
-  .table-responsive
-  {
-    height:200px;  
+  .table-responsive {
+    height:200px;
     overflow:auto;
   }
   thead tr:nth-child(1) th

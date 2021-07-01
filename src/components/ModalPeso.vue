@@ -38,7 +38,10 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary btn-lg mr-0" @click="confirmar()">OK</button>
+          <button type="button"
+          class="btn btn-secondary btn-lg mr-0"
+          @click="confirmar()">OK
+          </button>
         </div>
       </div>
     </div>
@@ -46,63 +49,57 @@
 </template>
 
 <script>
-import { onMounted, computed, ref} from 'vue';
-import {useStore} from "vuex";
-import axios from "axios";
+import { onMounted, computed, ref } from 'vue';
+import { useStore } from 'vuex';
+// import axios from "axios";
 
 export default {
-    name: 'ModalPeso',
-    setup() {
-        const store = useStore();
-        var unidades = ref('0');
-        var infoArticulo = ref({
-        precioConIva: 0
-        });
-        var idBoton = null;
-        var getUnidades = computed(()=> {
-        let valor = parseInt(unidades.value);
-        if(!isNaN(valor))
-        {
-            return valor;
-        }
-        else
-        {
-            return 0;
-        }
-        });
-        var getPrecio = computed(()=> {
-        return ((Number(unidades.value)/1000)*infoArticulo.value.precioConIva).toFixed(2);
-        });
-        // function abrirModal(idArticulo: number, idBoton: number){
-        //   infoArticulo.value = ipcRenderer.sendSync('get-info-articulo', idArticulo);
-        //   idBoton = idBoton;
-        //   $('#modalPeso').modal();
-        // }
+  name: 'ModalPeso',
+  setup() {
+    const store = useStore();
+    const unidades = ref('0');
+    const infoArticulo = ref({
+      precioConIva: 0,
+    });
+    // var idBoton = null;
+    const getUnidades = computed(() => {
+      const valor = parseInt(unidades.value, 10);
+      if (!valor.isNaN) {
+        return valor;
+      }
+      return 0;
+    });
+    const getPrecio = computed(() => ((Number(unidades.value) / 1000)
+    * infoArticulo.value.precioConIva).toFixed(2));
+    // function abrirModal(idArticulo: number, idBoton: number){
+    //   infoArticulo.value = ipcRenderer.sendSync('get-info-articulo', idArticulo);
+    //   idBoton = idBoton;
+    //   $('#modalPeso').modal();
+    // }
 
-        function agregarTecla(x){
-        unidades.value += String(x);
-        }
-        function eliminarTecla(){
-        unidades.value = unidades.value.slice(0, -1);
-        }
-        function confirmar(){
-        // toc.addItem(this.infoArticulo._id, this.idBoton, true, {precioAplicado: Number(this.getPrecio), infoArticulo: this.infoArticulo});
-        store.dispatch("ModalPeso/cerrarModal");
-        unidades.value = '0';
-        }
-
-        onMounted(()=>{
-        store.dispatch("ModalPeso/setModal");
-        });
-
-        return {
-            confirmar, 
-            eliminarTecla, 
-            agregarTecla,
-            getPrecio,
-            getUnidades
-        }
-        /* FINAL SETUP */
+    function agregarTecla(x) {
+      unidades.value += String(x);
     }
-}
+    function eliminarTecla() {
+      unidades.value = unidades.value.slice(0, -1);
+    }
+    function confirmar() {
+      store.dispatch('ModalPeso/cerrarModal');
+      unidades.value = '0';
+    }
+
+    onMounted(() => {
+      store.dispatch('ModalPeso/setModal');
+    });
+
+    return {
+      confirmar,
+      eliminarTecla,
+      agregarTecla,
+      getPrecio,
+      getUnidades,
+    };
+    /* FINAL SETUP */
+  },
+};
 </script>

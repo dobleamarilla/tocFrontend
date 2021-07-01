@@ -14,14 +14,13 @@ import ModalPeso from '@/components/ModalPeso.vue'; // @ is an alias to /src
 import Footer from '@/components/Footer.vue'; // @ is an alias to /src
 import InstallWizard from '@/components/InstallWizard.vue'; // @ is an alias to /src
 
-
 export default {
   name: 'Home',
   components: {
     Teclas,
     ModalPeso,
     Footer,
-    InstallWizard
+    InstallWizard,
   },
 };
 </script>
