@@ -11,7 +11,7 @@
             </tr>
           </thead>
           <tbody class="tableBody" :style="conCliente">
-            <tr v-for="(item, index) of cesta.lista.reverse()"
+            <tr v-for="(item, index) of cestaAlReves"
             :key="index"
             v-bind:class="{
               'estiloPromo': item.promocion.esPromo,
@@ -31,22 +31,7 @@
         </table>
       </div>
     </div>
-    <div class="col-md-7 ps-4" style="padding-top: 36px;">
-      <div class="row">
-        <button
-          class="btn btn-secondary sizeMenus botonesPrincipales anchoBotonTotal me-2 menusColorIvan"
-          @click="cobrar()"><i class="bi bi-cart iconosBootstrap"></i>
-          {{getTotal}} €
-        </button>
-        <button class="btn btn-secondary botonesPrincipales anchoBotonBorrar me-2 menusColorIvan"
-          @click="borrar()"><i class="bi bi-trash iconosBootstrap"></i>
-        </button>
-        <button class="btn btn-secondary botonesPrincipales anchoBotonMas menusColorIvan"
-          @click="abrirModalTicketsAbiertos()">
-          <i class="bi bi-plus-circle-fill iconosBootstrap"></i>
-        </button>
-      </div>
-    </div>
+    <MenuBotones/>
   </div>
 </template>
 
@@ -57,18 +42,18 @@ import axios from 'axios';
 
 import { useStore } from 'vuex';
 
+import MenuBotones from '@/components/MenuBotones.vue'; // @ is an alias to /src
+
 export default {
   name: 'Footer',
   setup() {
     const store = useStore();
     const cesta = computed(() => store.state.Cesta.cesta);
-    let activo = null;
-    activo = null;
+    const activo = computed(() => store.state.Cesta.activo);
     const conCliente = null;
     // const puntosClienteActivo = 0;
     const lineaDeRegalo = null;
     // var prohibirBuscarArticulos = true;
-    // const listaAlReves = computed(() => cesta.value.reverse());
     const getTotal = computed(() => {
       let suma = 0;
       for (let i = 0; i < cesta.value.lista.length; i += 1) {
@@ -78,7 +63,10 @@ export default {
       }
       return suma.toFixed(2);
     });
-
+    const cestaAlReves = computed(() => {
+      const aux = cesta.value.lista; // Reverse muta el array.
+      return aux.reverse();
+    });
     // onBeforeMount(() => {
     //   axios.post('/getCesta').then((res) => {
     //     store.dispatch('Cesta/setCestaAction', res);
@@ -114,61 +102,15 @@ export default {
       cesta,
       sePuedeRegalar,
       activo,
+      cestaAlReves,
     };
+  },
+  components: {
+    MenuBotones,
   },
 };
 </script>
 
 <style scoped>
-.sizeMenus{
-    font-size: 42px;
-}
-.anchoBotonTotal {
-  width: 420px;
-}
-.anchoBotonBorrar {
-  width: 200px;
-}
-.anchoBotonMas {
-  width: 200px;
-}
-.botonesPrincipales{
-  background-color: #fff5e9;
-  color: #c95907;
-  border-color: #bf5c18;
-  border-width: 3px;
-}
-.menusColorIvan.btn-secondary:hover {
-    color: #c95907 !important;
-    background-color: #fff5e9 !important;
-    border-color: #bf5c18 !important;
-    border-width: 3px;
-  }
 
-.menusColorIvan.btn-secondary:focus, .btn-secondary.focus {
-  color: #c95907 !important;
-  background-color: #fff5e9 !important;
-  border-color: #bf5c18 !important;
-  box-shadow: none !important;
-  border-width: 3px;
-}
-
-.menusColorIvan.btn-secondary:not(:disabled):not(.disabled):active,
-.btn-secondary:not(:disabled):not(.disabled).active,
-.show > .btn-secondary.dropdown-toggle {
-  color: #c95907 !important;
-  background-color: #fff5e9 !important;
-  border-color: #bf5c18 !important;
-  border-width: 3px;
-}
-
-.menusColorIvan.btn-secondary:not(:disabled):not(.disabled):active:focus,
-.btn-secondary:not(:disabled):not(.disabled).active:focus,
-.show > .btn-secondary.dropdown-toggle:focus {
-  box-shadow: none !important;
-}
-
-.iconosBootstrap {
-  font-size: 5rem;
-}
 </style>
