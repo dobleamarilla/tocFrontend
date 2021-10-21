@@ -27,6 +27,11 @@ import Caja from './modules/Caja';
 let toastElList = null;
 let toastList = null;
 
+window.addEventListener('contextmenu', function (e) { 
+  // do something here... 
+  e.preventDefault(); 
+}, false);
+
 export default createStore({
   state: {
     toast: {

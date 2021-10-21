@@ -1,14 +1,14 @@
 <template>
   <div class="row pt-1 align-items-center">
-    <div class="col text-center" style="max-width: 250px">
-      <div class="row ms-2" style="max-width: 220px">
+    <div v-if="menuActivo === 0" class="col text-center" style="max-width: 245px; max-height: 196px;">
+      <div class="row ms-2" style="max-width: 230px">
         <button
-        style="max-width: 102px"
+        style="max-width: 106px"
         class="btn btn-secondary btn-sm botonesPrincipales menusColorIvan" @click="showMenu">
           <i class="bi bi-list display-6"></i>
         </button>
         <button
-        style="max-width: 102px"
+        style="max-width: 106px"
           class="btn btn-secondary ms-1 btn-block sizeMenus btn-sm botonesPrincipales
           me-2 menusColorIvan"
           @click="buscarProducto()"><i class="bi bi-search display-6"></i>
@@ -17,13 +17,13 @@
 
       <div class="row mt-1 ms-2" style="max-width: 220px">
         <button
-        style="max-width: 102px"
+        style="max-width: 106px"
         class="btn btn-secondary botonesPrincipales btn-sm menusColorIvan"
           data-bs-toggle="modal" data-bs-target="#modalClientes">
           <i class="bi bi-person-fill display-6"></i>
         </button>
         <router-link
-        style="max-width: 102px"
+        style="max-width: 106px"
         class="btn btn-secondary botonesPrincipales btn-sm ms-1 menusColorIvan"
         to='/mesas'>
           <i class="bi bi-cart-plus-fill display-6"></i>
@@ -32,21 +32,37 @@
 
       <div class="row mt-1 ms-2" style="max-width: 220px">
         <button
-        style="max-width: 102px"
+        style="max-width: 106px"
         class="btn btn-secondary botonesPrincipales btn-sm menusColorIvan"
           @click="borrar()"><i class="bi bi-calculator display-6"></i>
         </button>
         <button
-        style="max-width: 102px"
+        style="max-width: 106px"
         class="btn btn-secondary botonesPrincipales btn-sm ms-1 menusColorIvan"
           @click="borrar()">
           <i v-if='activo === null' class="bi bi-trash display-6"></i>
           <i v-else @click="borrarItemCesta()" class="bi bi-x-lg display-6"></i>
         </button>
       </div>
+
     </div>
 
-    <div class="col">
+    <div v-if="menuActivo === 1" class="col text-center" style="max-width: 245px; max-height: 196px;">
+      MUAHAHHA
+    </div>
+
+    <div class="col" style="max-width:50px"
+    @touchstart="touchStart"
+    @touchend="touchEnd"
+    @click="cambiarMenu()">
+      <div class="row">
+        <button class="btn rotate rounded-0">
+          <i class="bi bi-star display-6"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="col ms-3">
         <div class="table-responsive estiloCesta section" style="height: 26vh !important;">
           <table class="table fuenteIvan colorFuente" id="job-table">
             <thead style="background-color: red">
@@ -130,8 +146,26 @@ export default {
     const conCliente = null;
     const trabajadorActivo = ref('');
     const arrayTrabajadores = ref([]);
+    const menuActivo = ref(0);
     let toastElList = null;
     let toastList = null;
+    let inicioMagic = null;
+    let finalMagic = null;
+
+    function touchStart() {
+      inicioMagic = new Date();
+    }
+
+    function touchEnd() {
+    	finalMagic = new Date();
+      const diffTime = Math.abs(finalMagic - inicioMagic);
+      if (diffTime < 3000) {
+        console.log('Pulsación rápida');
+      } else {
+        console.log('Pulsación lenta');
+        router.go('/');
+      }
+    }
 
     function abrirToast() {
       toastList[0].show();
@@ -169,6 +203,10 @@ export default {
 
     function goToCobrar() {
       router.push(`/cobro/${getTotal.value}`);
+    }
+
+    function cambiarMenu() {
+      (menuActivo.value === 1) ? (menuActivo.value = 0) : (menuActivo.value += 1)
     }
 
     onMounted(() => {
@@ -256,6 +294,10 @@ export default {
     }
 
     return {
+      touchStart,
+      touchEnd,
+      menuActivo,
+      cambiarMenu,
       getTotal,
       conCliente,
       cesta,
@@ -346,5 +388,14 @@ export default {
 .section::-webkit-scrollbar-thumb {
     background-color: #c95907;
     border-radius: 100px;
+}
+
+.rotate {
+  /* transform: rotateZ(90deg); */
+  width: 65px !important;
+  max-width: 196px;
+  height: 196px !important;
+  background-color: #fff5e9 !important;
+  color: #bf5c18;
 }
 </style>
