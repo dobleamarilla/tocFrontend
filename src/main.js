@@ -14,6 +14,6 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 
 import 'bootstrap';
 
-axios.defaults.baseURL = 'http://localhost:8081';
+axios.defaults.baseURL = 'http://localhost:3000';
 
 createApp(App).use(store).use(router).mount('#app');

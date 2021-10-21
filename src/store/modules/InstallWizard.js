@@ -55,7 +55,7 @@ export default {
     },
     setModal({ commit }) {
       commit('setModalMutation');
-      axios.post('/todoInstalado').then((res) => {
+      axios.post('/parametros/todoInstalado').then((res) => {
         if (res.data.todoInstalado === false) {
           commit('abrirModalMutation');
         } else {

@@ -3,6 +3,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-body">
+                  <form>
                     <div class="mb-3">
                         <label class="form-label">Nº Licencia</label>
                         <input v-model="licencia" type="text" class="form-control form-control-lg">
@@ -11,7 +12,7 @@
                         <label class="form-label">Contraseña</label>
                         <input v-model="password"
                             type="password"
-                            class="form-control form-control-lg">
+                            class="form-control form-control-lg" autocomplete="on">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Tipo impresora</label>
@@ -40,6 +41,7 @@
                         style="display:block;margin:auto;width:200px"
                         alt="Esperando respuesta del servidor">
                     </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary"

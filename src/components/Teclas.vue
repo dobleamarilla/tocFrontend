@@ -11,13 +11,13 @@
     </template>
     <template v-else class="scrollmenu">
       <div class="scrollmenu">
-        <template class="col colJuntitasMenus menus">
+        <div class="col colJuntitasMenus menus">
           <button v-for="(item, index) of listaMenus"
           :key="index" style="width: 200px"
-          class="btn btn-secondary menus menusColorIvan ml-2"
+          class="btn btn-secondary menus menusColorIvan ms-2"
           v-bind:class="[{'activo' : esActivo(index)}, 'colorMenus']"
           @click="clickMenu(index)">{{item.nomMenu}}</button>
-        </template>
+        </div>
       </div>
     </template>
   </div>
@@ -69,15 +69,19 @@
 </template>
 
 <script>
-import { computed, ref } from 'vue';
+/* eslint-disable */
+import { computed, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
 // import { Modal } from 'bootstrap';
 import axios from 'axios';
+import router from '../router/index';
 
 export default {
   name: 'Teclas',
   setup() {
     const store = useStore();
+    const cesta = computed(() => store.state.Cesta.cesta);
+    const cajaAbierta = computed(() => store.state.Caja.cajaAbierta);
     const listaMenus = ref([{ nomMenu: '' }]);
     const listaPrecios = ref([{
       _id: -1,
@@ -94,25 +98,23 @@ export default {
     const botonesPrecio = false;
     const unidadesAplicar = 1;
     const edadState = computed(() => store.state.modalPeso.edadState);
+
     function test(articuloAPeso, idBoton) {
       store.dispatch('ModalPeso/abrirModal', { idArticulo: articuloAPeso.idArticle, idBoton });
     }
-
     function esActivo(x) {
       if (x === menuActivo) {
         return true;
       }
       return false;
     }
-
     function modalesSumable(articuloAPeso, idBoton) {
       store.dispatch('ModalPeso/abrirModal', { idArticulo: articuloAPeso.idArticle, idBoton });
     }
-
     function mostrarInfoVisor(objListadoTeclas) {
-      console.log(objListadoTeclas);
+      const a = objListadoTeclas;
+      a.toString();
     }
-
     function resetTeclado() {
       listadoTeclas.value = [
         {
@@ -405,7 +407,6 @@ export default {
         },
       ];
     }
-
     function cargarTeclado(data) {
       resetTeclado();
       for (let i = 0; i < data.length; i += 1) {
@@ -422,9 +423,8 @@ export default {
         listadoTeclas.value[data[i].pos].nombreArticulo.precio = (datosProducto !== undefined) ? `${datosProducto.precioConIva}€` : '0€';
       }
     }
-
     function clickMenu(index) {
-      axios.post('/clickmenu', { nombreMenu: listaMenus.value[index].nomMenu }).then((res) => {
+      axios.post('/menus/clickMenu', { nombreMenu: listaMenus.value[index].nomMenu }).then((res) => {
         if (!res.data.bloqueado) {
           menuActivo = index;
           cargarTeclado(res.data.resultado);
@@ -433,17 +433,17 @@ export default {
         }
       });
     }
-
     function clickTecla(objListadoTeclas, esAPeso = false) {
       if (!esAPeso) {
-        axios.post('/setUnidadesAplicar', { unidades: unidadesAplicar }).then((res) => {
+        axios.post('cestas/setUnidadesAplicar', { unidades: unidadesAplicar }).then((res) => {
           if (res.data.okey) {
             if (!esAPeso) { // TIPO NORMAL
-              axios.post('/clickTeclaArticulo', {
+              axios.post('cestas/clickTeclaArticulo', {
                 idArticulo: objListadoTeclas.idArticle,
                 idBoton: objListadoTeclas.idBoton,
                 peso: esAPeso,
                 infoPeso: null,
+                idCesta: cesta.value._id
               }).then((res2) => {
                 if (res2.data.error === false && res2.data.bloqueado === false) {
                   store.dispatch('Cesta/setCestaAction', res2.data.cesta);
@@ -452,7 +452,6 @@ export default {
                 }
               });
             } else { // TIPO A PESO
-
             }
           } else {
             console.log('Error en setUnidadesAplicar');
@@ -460,15 +459,33 @@ export default {
         });
       }
     }
-
     resetTeclado();
-    axios.post('/getMenus').then((res) => {
+    axios.post('/menus/getMenus').then((res) => {
       if (!res.data.bloqueado) {
         listaMenus.value = res.data.resultado;
         clickMenu(0);
       } else {
         console.log('EN ESTE MOMENTO NO ES POSIBLE CARGAR EL TECLADO');
       }
+    });
+
+    onMounted(() => {
+      /* OBSERVAR SI LA CAJA ESTÁ ABIERTA */
+      axios.post('caja/estadoCaja').then((res) => {
+        if (!res.data.error) {
+          if (res.data.abierta) {
+            store.dispatch('Caja/setEstadoCaja', true);
+            console.log('establezco cajaAbierta = true');
+          } else {
+            store.dispatch('Caja/setEstadoCaja', false);
+            router.push('/abrirCaja');
+            console.log("PORQUEEEEEEEEEEEEE");
+          }
+        }
+      }).catch((err) => {
+        console.log(err);
+        alert('Error, contactar con informática');
+      });
     });
 
     return {
@@ -537,7 +554,6 @@ export default {
 .menus {
     height: 70px;
 }
-
 .colorMenus {
     background-color: #d45600;
     color: #fffaee;
@@ -553,20 +569,17 @@ export default {
     background-color: #fff5e9 !important;
     border-color: #bf5c18 !important;
   }
-
   .btn-secondary:focus, .btn-secondary.focus {
     color: #c95907 !important;
     background-color: #fff5e9 !important;
     border-color: #bf5c18 !important;
     box-shadow: none !important;
   }
-
   .btn-secondary.disabled, .btn-secondary:disabled {
     color: #fff !important;
     background-color: #6c757d !important;
     border-color: #6c757d !important;
   }
-
   .btn-secondary:not(:disabled):not(.disabled):active,
   .btn-secondary:not(:disabled):not(.disabled).active,
   .show > .btn-secondary.dropdown-toggle {
@@ -574,7 +587,6 @@ export default {
     background-color: #fff5e9 !important;
     border-color: #bf5c18 !important;
   }
-
   .btn-secondary:not(:disabled):not(.disabled):active:focus,
   .btn-secondary:not(:disabled):not(.disabled).active:focus
   .show > .btn-secondary.dropdown-toggle:focus {
@@ -583,7 +595,6 @@ export default {
   .colJuntitasMenus {
     padding-right: 0px;
   }
-
   div.scrollmenu {
     width: 100%;
     overflow-x: scroll;

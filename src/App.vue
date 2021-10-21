@@ -222,7 +222,8 @@
       background-color: #FFFFFF;
   }
   .table-responsive {
-    height:200px;
+    height: 20vh;
+    width: 50vw;
     overflow:auto;
   }
   thead tr:nth-child(1) th
@@ -243,20 +244,20 @@
   }
 
   .botonEze {
-      box-shadow: inset 0px 1px 0px 0px #dcecfb;
-      background-color: #bddbfa;
-      /* border-radius: 6px; */
-      /* border: 1px solid #84bbf3; */
-      display: inline-block;
-      cursor: pointer;
-      color: #ffffff;
-      font-family: Arial;
-      font-size: 30px;
-      font-weight: bold;
-      padding: 15px 29px;
-      text-decoration: none;
-      /* text-shadow: 0px 1px 0px #528ecc; */
-      margin: 0.3vw;
+    min-height: 70px;
+    min-width: 70px;
+    box-shadow: inset 0px 1px 0px 0px #dcecfb;
+    background-color: #bddbfa;
+    display: inline-block;
+    cursor: pointer;
+    color: #ffffff;
+    font-family: Arial;
+    font-size: 45px;
+    font-weight: bold;
+    padding-left: 21px;
+    text-decoration: none;
+    /* text-shadow: 0px 1px 0px #528ecc; */
+    margin: 0.3vw;
   }
   .botonEze:hover {
     background-color:#80b5ea;

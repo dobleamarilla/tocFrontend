@@ -8,12 +8,50 @@ const routes = [
     component: Home,
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+    path: '/cobro/:total',
+    name: 'Cobro',
+    component: () => import('../views/Cobro.vue'),
+  },
+  {
+    path: '/abrirCaja',
+    name: 'Abrir Caja',
+    component: () => import('../views/AbrirCaja.vue'),
+  },
+  {
+    path: '/menu/',
+    name: 'Menu',
+    component: () => import('../views/Menu.vue'),
+    children: [
+      {
+        path: 'caja',
+        component: () => import('../components/Caja.vue'),
+      },
+      {
+        path: 'fichajes',
+        component: () => import('../components/Fichajes.vue'),
+      },
+      {
+        path: 'pedidos',
+        component: () => import('../components/Pedidos.vue'),
+      },
+      {
+        path: 'devoluciones',
+        component: () => import('../components/Devoluciones.vue'),
+      },
+      {
+        path: 'entregas',
+        component: () => import('../components/Entregas.vue'),
+      },
+      {
+        path: 'menu-tecnico',
+        component: () => import('../components/MenuTecnico.vue'),
+      },
+    ],
+  },
+  {
+    path: '/mesas',
+    name: 'Mesas',
+    component: () => import('../views/Mesas.vue'),
   },
 ];
 

@@ -1,0 +1,50 @@
+<template>
+    <div class="modal" id="modalEntradaDinero" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Entrada de dinero</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label for="inputLicencia" class="col-sm-3 col-form-label">
+                            Cantidad €
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="number" v-model="cantidad"
+                            class="form-control form-control-lg">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword" class="col-sm-3 col-form-label">Concepto</label>
+                        <div class="col-sm-9">
+                            <input type="text" v-model="concepto"
+                            class="form-control form-control-lg">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" @click="volverACaja()">
+                        VOLVER
+                    </button>
+                    <button type="button" class="btn btn-danger" @click="confirmarEntrada()">
+                        CONFIRMAR ENTRADA
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+export default {
+    name: 'EntradaDinero',
+    setup() {
+        const cantidad = 0;
+        const concepto = 'Cambio';
+        return {
+            cantidad,
+            concepto,
+        };
+    },
+};
+</script>
