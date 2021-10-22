@@ -20,6 +20,8 @@ import Trabajadores from './modules/Trabajadores';
 
 import Clientes from './modules/Clientes';
 
+import Footer from './modules/Footer';
+
 import socket from '../sockets/socket';
 
 import Caja from './modules/Caja';
@@ -34,6 +36,7 @@ window.addEventListener('contextmenu', function (e) {
 
 export default createStore({
   state: {
+    modoActual: 'NORMAL',
     toast: {
       tipo: 'INFO',
       mensaje: '',
@@ -43,6 +46,9 @@ export default createStore({
     setToastMutation(state, payload) {
       state.toast = payload;
     },
+    setModoActualMutation(state, payload) {
+      state.modoActual = payload;
+    }
   },
   actions: {
     initToast() {
@@ -55,6 +61,9 @@ export default createStore({
     showToast() {
       toastList[0].show();
     },
+    setModoActual({ commit }, payload) {
+      commit('setModoActualMutation', payload);
+    }
   },
   modules: {
     InstallWizard,
@@ -67,5 +76,6 @@ export default createStore({
     Trabajadores,
     Clientes,
     Caja,
+    Footer,
   },
 });

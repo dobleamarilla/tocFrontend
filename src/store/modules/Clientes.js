@@ -1,11 +1,11 @@
 export default {
   namespaced: true,
   state: {
-      clienteActivo: null,
+      infoCliente: null,
   },
   mutations: {
     setClienteActivoMutation(state, payload) {
-      state.clienteActivo = payload;
+      state.infoCliente = payload;
     },
   },
   actions: {

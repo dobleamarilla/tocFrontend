@@ -10,7 +10,7 @@
       </div>
     </template>
     <template v-else class="scrollmenu">
-      <div class="scrollmenu">
+      <div class="scrollmenu" style="-webkit-transform: translateZ(0); ">
         <div class="col colJuntitasMenus menus">
           <button v-for="(item, index) of listaMenus"
           :key="index" style="width: 200px"
@@ -470,6 +470,7 @@ export default {
     });
 
     onMounted(() => {
+      document.onselectstart = function(){ return false; }
       /* OBSERVAR SI LA CAJA ESTÁ ABIERTA */
       axios.post('caja/estadoCaja').then((res) => {
         if (!res.data.error) {

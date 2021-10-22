@@ -38,7 +38,7 @@
                                  <td class="clientesAnchoNombre">{{cliente.nombre}}</td>
                                  <td class="clientesAnchoBotones">
                                     <button
-                                     @click="selectCliente(cliente.id)"
+                                     @click="selectCliente(cliente)"
                                      href="#" class="btn btn-primary btn-lg" style="width: 150px">
                                         Seleccionar
                                     </button>
@@ -88,23 +88,35 @@ export default {
     }
 
     function selectDeliveroo() {
-      store.dispatch('Clientes/setClienteActivo', DELIVERO);
-      console.log('El cliente es: ', clienteActivo.value);
-      modalClientes.hide();
-      store.dispatch('setToastAction', {
-         tipo: 'SUCCESS',
-         mensaje: 'Cliente seleccionado'
-      });
-      store.dispatch('showToast');
+      axios.post('clientes/infoDeliveroo').then((res) => {
+         if (!res.data.error) {
+            this.selectCliente(res.data.deliveroo);
+         } else {
+            store.dispatch('setToastAction', {
+               tipo: 'DANGER',
+               mensaje: 'Error. No se ha podido seleccionar DELIVEROO'
+            });
+            store.dispatch('showToast');
+         }
+      }).catch((err) => {
+         console.log(err);
+         store.dispatch('setToastAction', {
+            tipo: 'DANGER',
+            mensaje: 'Error. No se ha podido seleccionar DELIVEROO'
+         });
+         store.dispatch('showToast');
+      }); 
+      this.selectCliente();
     }
 
     //  function borrarClienteActivo() {
     //     store.dispatch('Clientes/borrarClienteActivo', null);
     //  }
 
-    function selectCliente(strClient) {
-      store.dispatch('Clientes/setClienteActivo', strClient);
-      console.log('El cliente es: ', clienteActivo.value);
+    function selectCliente(cliente) {
+      store.dispatch('Clientes/setClienteActivo', cliente);
+      store.dispatch('setModoActual', 'CLIENTE');
+      store.dispatch('Footer/setMenuActivo', 1);
       modalClientes.hide();
       store.dispatch('setToastAction', {
          tipo: 'SUCCESS',
@@ -116,7 +128,7 @@ export default {
     function buscar() {
        axios.post('clientes/buscar', { busqueda: inputBusqueda.value }).then((res) => {
          arrayClientes.value = res.data;
-         // console.log(res);
+         console.log(res.data);
        }).catch((err) => {
           console.log(err);
        });

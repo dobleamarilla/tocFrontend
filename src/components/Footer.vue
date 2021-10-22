@@ -47,8 +47,20 @@
 
     </div>
 
-    <div v-if="menuActivo === 1" class="col text-center" style="max-width: 245px; max-height: 196px;">
-      MUAHAHHA
+    <div v-if="menuActivo === 1" class="col text-center"
+    :class="{
+      tipoNormal: modoActual === 'NORMAL',
+      tipoDevolucion: modoActual === 'DEVOLUCION',
+      tipoCliente: modoActual === 'CLIENTE'
+    }"
+    style="max-width: 245px; max-height: 196px;">
+      <p v-if="modoActual != 'CLIENTE'">{{modoActual}}</p>
+      <p v-if="modoActual == 'CLIENTE'" class="infoCliente">
+        4676 puntos
+      </p>
+      <p v-if="modoActual == 'CLIENTE'" class="infoCliente">
+        {{infoCliente.nombre}}
+      </p>
     </div>
 
     <div class="col" style="max-width:50px"
@@ -124,7 +136,7 @@
 </template>
 
 <script>
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watchEffect } from 'vue';
 
 import axios from 'axios';
 
@@ -146,7 +158,10 @@ export default {
     const conCliente = null;
     const trabajadorActivo = ref('');
     const arrayTrabajadores = ref([]);
-    const menuActivo = ref(0);
+    const menuActivo = computed(() => store.state.Footer.menuActivo);
+    const modoActual = computed(() => store.state.modoActual);
+    const infoCliente = computed(() => store.state.Clientes.infoCliente);
+
     let toastElList = null;
     let toastList = null;
     let inicioMagic = null;
@@ -206,10 +221,14 @@ export default {
     }
 
     function cambiarMenu() {
-      (menuActivo.value === 1) ? (menuActivo.value = 0) : (menuActivo.value += 1)
+      (menuActivo.value === 1) ? (store.dispatch('Footer/setMenuActivo', 0)) : (store.dispatch('Footer/setMenuActivo', menuActivo.value + 1))
     }
 
     onMounted(() => {
+      /* SET MODO ACTUAL */
+      if (modoActual.value == 'DEVOLUCION' || modoActual.value == 'CLIENTE') {
+        store.dispatch('Footer/setMenuActivo', 1)
+      }
       toastElList = [].slice.call(document.querySelectorAll('.toast'));
       toastList = toastElList.map((toastEl) => new Toast(toastEl));
 
@@ -294,6 +313,8 @@ export default {
     }
 
     return {
+      infoCliente,
+      modoActual,
       touchStart,
       touchEnd,
       menuActivo,
@@ -397,5 +418,26 @@ export default {
   height: 196px !important;
   background-color: #fff5e9 !important;
   color: #bf5c18;
+}
+
+.tipoNormal {
+  color: #c95907;
+  font-size: 54px;
+  font-weight: bold;
+}
+.tipoDevolucion {
+  color: #e45656;
+  font-weight: bold;
+  font-size: 30px;
+}
+
+.tipoCliente {
+  color: #c95907;
+  font-size: 30px;
+}
+
+.infoCliente {
+  color: #c95907;
+  font-size: 23px;
 }
 </style>

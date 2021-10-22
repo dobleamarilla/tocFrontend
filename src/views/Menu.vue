@@ -27,7 +27,7 @@
             <strong class="mb-1">Fichajes</strong>
           </div>
         </a>
-        <a href="#" @click="goTo('/')"
+        <a href="#" @click="devoluciones()"
         class="list-group-item list-group-item-action py-3 lh-tight">
           <div class="d-flex w-100 align-items-center justify-content-between">
             <strong class="mb-1">Devoluciones</strong>
@@ -74,6 +74,12 @@ export default {
     function goTo(url) {
       router.push(url);
     }
+    
+    /* Establece el modo y redirige a la home */
+    function devoluciones() {
+      store.dispatch('setModoActual', 'DEVOLUCION');
+      router.push('/');
+    }
 
     function imprimirEntregas() {
       // const licencia = this.getNumeroTresDigitos(this.getParametros().licencia);
@@ -97,6 +103,7 @@ export default {
       quitarActivoTicket();
     }
     return {
+      devoluciones,
       isHidden,
       hideMenu,
       quitarActivoTicket,
