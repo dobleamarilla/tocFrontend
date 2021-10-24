@@ -36,11 +36,16 @@ window.addEventListener('contextmenu', function (e) {
 
 export default createStore({
   state: {
+    parametros: null,
     modoActual: 'NORMAL',
     toast: {
       tipo: 'INFO',
       mensaje: '',
     },
+  },
+  getters: {
+    getModoActual: (state) => state.modoActual,
+    getParametros: (state) => state.parametros
   },
   mutations: {
     setToastMutation(state, payload) {
@@ -48,6 +53,9 @@ export default createStore({
     },
     setModoActualMutation(state, payload) {
       state.modoActual = payload;
+    },
+    setParametrosMutation(state, payload) {
+      state.parametros = payload;
     }
   },
   actions: {
@@ -63,6 +71,9 @@ export default createStore({
     },
     setModoActual({ commit }, payload) {
       commit('setModoActualMutation', payload);
+    },
+    setParametros({ commit }, payload) {
+      commit('setParametrosMutation', payload);
     }
   },
   modules: {

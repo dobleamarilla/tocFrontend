@@ -69,32 +69,22 @@ export default {
   name: 'MenuClientes',
   setup() {
     const store = useStore();
-    const GLOVO = 'CliBoti_000_{A83B364B-252F-464B-B0C3-AA89DA258F64}';
-    const DELIVERO = 'CliBoti_000_{3F7EF049-80E2-4935-9366-0DB6DED30B67}';
+    const GLOVO = store.getters['Clientes/getGlovo'];
+    const DELIVEROO = store.getters['Clientes/getDeliveroo'];
     const nombre = 'Santy';
     const inputBusqueda = ref('');
     const clienteActivo = computed(() => store.state.Clientes.clienteActivo);
     const arrayClientes = ref([]);
     let modalClientes = null;
-    function selectGlovo() {
-      store.dispatch('Clientes/setClienteActivo', GLOVO);
-      console.log('El cliente es: ', clienteActivo.value);
-      modalClientes.hide();
-      store.dispatch('setToastAction', {
-         tipo: 'SUCCESS',
-         mensaje: 'Cliente seleccionado'
-      });
-      store.dispatch('showToast');
-    }
 
-    function selectDeliveroo() {
-      axios.post('clientes/infoDeliveroo').then((res) => {
+    function selectGlovo() {
+      axios.post('clientes/getClienteByID', { idCliente: GLOVO }).then((res) => {
          if (!res.data.error) {
-            this.selectCliente(res.data.deliveroo);
+            selectCliente(res.data.infoCliente);
          } else {
             store.dispatch('setToastAction', {
                tipo: 'DANGER',
-               mensaje: 'Error. No se ha podido seleccionar DELIVEROO'
+               mensaje: res.data.mensaje
             });
             store.dispatch('showToast');
          }
@@ -102,16 +92,33 @@ export default {
          console.log(err);
          store.dispatch('setToastAction', {
             tipo: 'DANGER',
-            mensaje: 'Error. No se ha podido seleccionar DELIVEROO'
+            mensaje: res.data.mensaje
          });
          store.dispatch('showToast');
       }); 
-      this.selectCliente();
     }
 
-    //  function borrarClienteActivo() {
-    //     store.dispatch('Clientes/borrarClienteActivo', null);
-    //  }
+    function selectDeliveroo() {
+       console.log("DELIVEROO: ", DELIVEROO);
+      axios.post('clientes/getClienteByID', { idCliente: DELIVEROO }).then((res) => {
+         if (!res.data.error) {
+            selectCliente(res.data.infoCliente);
+         } else {
+            store.dispatch('setToastAction', {
+               tipo: 'DANGER',
+               mensaje: res.data.mensaje
+            });
+            store.dispatch('showToast');
+         }
+      }).catch((err) => {
+         console.log(err);
+         store.dispatch('setToastAction', {
+            tipo: 'DANGER',
+            mensaje: res.data.mensaje
+         });
+         store.dispatch('showToast');
+      }); 
+    }
 
     function selectCliente(cliente) {
       store.dispatch('Clientes/setClienteActivo', cliente);

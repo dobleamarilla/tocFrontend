@@ -4,41 +4,41 @@
   <div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-white"
   style="width: 140px;">
       <div class="list-group list-group-flush border-bottom scrollarea">
-        <a href="#" @click="goTo('/')" class="list-group-item list-group-item-action py-3 lh-tight">
+        <router-link to="/" class="list-group-item list-group-item-action py-3 lh-tight">
           <div class="d-flex w-100 align-items-center justify-content-between">
             <strong class="mb-1">Vender</strong>
           </div>
-        </a>
-        <a href="#" @click="goTo('/menu/caja')"
+        </router-link>
+        <router-link to="/menu/caja"
         class="list-group-item list-group-item-action py-3 lh-tight">
           <div class="d-flex w-100 align-items-center justify-content-between">
             <strong class="mb-1">Caja</strong>
           </div>
-        </a>
-        <a href="#" @click="goTo('/menu/pedidos')"
+        </router-link>
+        <button @click="pedidos()"
         class="list-group-item list-group-item-action py-3 lh-tight">
           <div class="d-flex w-100 align-items-center justify-content-between">
             <strong class="mb-1">Pedidos</strong>
           </div>
-        </a>
-        <a href="#" @click="goTo('/menu/fichajes')"
+        </button>
+        <router-link to="/menu/fichajes"
         class="list-group-item list-group-item-action py-3 lh-tight">
           <div class="d-flex w-100 align-items-center justify-content-between">
-            <strong class="mb-1">Fichajes</strong>
+            <strong class="mb-1">Trabajador/a</strong>
           </div>
-        </a>
-        <a href="#" @click="devoluciones()"
+        </router-link>
+        <button @click="devoluciones()"
         class="list-group-item list-group-item-action py-3 lh-tight">
           <div class="d-flex w-100 align-items-center justify-content-between">
             <strong class="mb-1">Devoluciones</strong>
           </div>
-        </a>
-        <a href="#" @click="imprimirEntregas()"
+        </button>
+        <button @click="imprimirEntregas()"
         class="list-group-item list-group-item-action py-3 lh-tight">
           <div class="d-flex w-100 align-items-center justify-content-between">
             <strong class="mb-1">Entregas</strong>
           </div>
-        </a>
+        </button>
       </div>
     </div>
     </div>
@@ -54,13 +54,14 @@ import { useStore } from 'vuex';
 import axios from 'axios';
 import ToastComponent from '@/components/Toast.vue';
 import router from '../router/index';
-// import Dependientas from '@/components/Dependientas.vue';
+import { parametros } from '../services/parametros';
 
 export default {
   name: 'Menu',
   setup() {
     const store = useStore();
     const isHidden = computed(() => store.state.Menu.hidden);
+    const params = parametros.getParametros();
 
     function quitarActivoTicket() {
       store.dispatch('Ticket/setActivoAction', null);
@@ -69,6 +70,10 @@ export default {
     function hideMenu() {
       store.dispatch('Menu/setHiddenAction', true);
       quitarActivoTicket();
+    }
+
+    function pedidos() {
+      router.push(`/menu/pedidos/${params.codigoTienda}`);
     }
 
     function goTo(url) {
@@ -103,6 +108,7 @@ export default {
       quitarActivoTicket();
     }
     return {
+      pedidos,
       devoluciones,
       isHidden,
       hideMenu,

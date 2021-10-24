@@ -244,6 +244,8 @@ export default {
     const route = useRoute();
     const store = useStore();
     const { total } = route.params;
+    const modoActual = store.getters['getModoActual'];
+    const infoCliente = store.getters['Clientes/getInfoCliente'];
     const sizeMonedas = '100';
     const sizeBilletes = '150';
     const esVIP = false;
@@ -369,8 +371,12 @@ export default {
             axios.post('tickets/crearTicketEfectivo', {
               total: Number(total),
               idCesta: cestaID.value,
+              idCliente: infoCliente
             }).then((res) => {
               if (!res.data.error) {
+                store.dispatch('setModoActual', 'NORMAL');
+                store.dispatch('Clientes/resetClienteActivo');
+                store.dispatch('Footer/resetMenuActivo');
                 router.push('/');
               } else {
                 store.dispatch('setToastAction', {
@@ -389,8 +395,12 @@ export default {
             axios.post('tickets/crearTicketDatafono3G', {
               total: Number(total),
               idCesta: cestaID.value,
+              idCliente: infoCliente
             }).then((res) => {
               if (!res.data.error) {
+                store.dispatch('setModoActual', 'NORMAL');
+                store.dispatch('Clientes/resetClienteActivo');
+                store.dispatch('Footer/resetMenuActivo');
                 router.push('/');
               } else {
                 store.dispatch('setToastAction', {

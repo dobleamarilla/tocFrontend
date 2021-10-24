@@ -31,7 +31,7 @@ const routes = [
         component: () => import('../components/Fichajes.vue'),
       },
       {
-        path: 'pedidos',
+        path: 'pedidos/:codiBotiga',
         component: () => import('../components/Pedidos.vue'),
       },
       {

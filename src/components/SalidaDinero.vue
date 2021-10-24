@@ -7,25 +7,18 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group row">
-                        <label for="inputLicencia" class="col-sm-3 col-form-label">Cantidad</label>
-                        <div class="col-sm-9">
-                            <input type="number" v-model="cantidad"
-                            class="form-control form-control-lg">
+                        <div class="input-group input-group-lg mb-3">
+                            <span class="input-group-text" id="basic-addon1">Cantidad</span>
+                            <input type="number" class="form-control" v-model="cantidad">
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label for="inputPassword" class="col-sm-3 col-form-label">Concepto</label>
-                        <div class="col-sm-9">
-                            <select v-model="concepto" class="custom-select"
-                            @change="selectOption($event)">
+                    <div class="form-group row mt-2">
+                        <div class="input-group mb-3">
+                            <select v-model="concepto" class="form-select form-select-lg mb-3">
                                 <option value="Entrega Diària" selected>ENTREGA DIARIA</option>
                                 <option value="COMPRAS">COMPRAS</option>
                                 <option value="OTROS">OTROS</option>
                             </select>
-                            <br><br>
-                            <input v-if="mostrarInput" type="text"
-                            class="form-control conceptoInput"
-                            id="inputBusqueda" placeholder="CONCEPTO">
                         </div>
                     </div>
                 </div>
@@ -42,18 +35,46 @@
     </div>
 </template>
 <script>
+import axios from 'axios';
+import { ref, onMounted } from 'vue';
+import { Modal } from 'bootstrap';
+
 export default {
     name: 'SalidaDinero',
     setup() {
-        const cantidad = 0;
-        const concepto = 'Entrega Diària';
-        const valoresSelect = ['Entrega Diària', 'COMPRAS'];
-        const mostrarInput = false;
+        const cantidad = ref(0);
+        const concepto = ref('Entrega Diària');
+        let modalSalidaDinero = null;
+
+        function cerrarModal() {
+            modalSalidaDinero.hide();
+        }
+
+        function confirmarSalida() {
+            axios.post('movimientos/nuevaSalida', {
+                cantidad: Number(cantidad.value),
+                concepto: concepto.value
+            }).then((res) => {
+                if (!res.data.error) {
+                    console.log('Salida OK');
+                    cerrarModal();
+                } else {
+                    alert(res.data.mensaje);
+                }
+            }).catch((err) => {
+                console.log(err);
+                alert('Error movimientos/nuevaSalida');
+            });
+        }
+
+        onMounted(() => {
+            modalSalidaDinero = new Modal(document.getElementById('modalSalidaDinero'));
+        });
+
         return {
             cantidad,
             concepto,
-            valoresSelect,
-            mostrarInput,
+            confirmarSalida,
         };
     },
 };

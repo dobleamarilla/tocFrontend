@@ -10,7 +10,7 @@
 
             <div class="card cardWidth">
                 <div class="card-body" style='text-align: center;'>
-                    <span><i class="bi bi-egg"></i></span>
+                    <span><i class="bi bi-cup-straw"></i></span>
                     <a href="#" class="btn btn-primary">Consumo personal</a>
                 </div>
             </div>

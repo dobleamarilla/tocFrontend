@@ -47,7 +47,7 @@
 
     </div>
 
-    <div v-if="menuActivo === 1" class="col text-center"
+    <div v-if="menuActivo === 1 && infoCliente.id != DELIVEROO && infoCliente.id != GLOVO" class="col text-center"
     :class="{
       tipoNormal: modoActual === 'NORMAL',
       tipoDevolucion: modoActual === 'DEVOLUCION',
@@ -61,6 +61,18 @@
       <p v-if="modoActual == 'CLIENTE'" class="infoCliente">
         {{infoCliente.nombre}}
       </p>
+    </div>
+
+    <!-- VISTA DELIVEROO -->
+    <div class="col text-center" v-if="infoCliente.id === DELIVEROO && menuActivo === 1"
+    style="max-width: 245px; max-height: 196px;">
+      <img src="../assets/logoDeliveroo.png" width="200" alt="Logo Deliveroo">
+    </div>
+
+    <!-- VISTA GLOVO -->
+    <div class="col text-center" v-if="infoCliente.id === GLOVO && menuActivo === 1"
+    style="max-width: 245px; max-height: 196px;">
+      <img src="../assets/logoGlovo.png" width="200" alt="Logo Glovo">
     </div>
 
     <div class="col" style="max-width:50px"
@@ -126,7 +138,7 @@
         <button
           class="btn btn-secondary w-100 botonesPrincipales menusColorIvan"
           @click="goToCobrar()"><i class="bi bi-cash-coin sizeBotonCobrar"></i>
-          <span class="sizeBotonCobrar">&nbsp;{{getTotal}} €</span>
+          <span class="sizeBotonCobrar">&nbsp;{{thisIsCatalunya}} €</span>
         </button>
       </div>
     </div>
@@ -161,7 +173,8 @@ export default {
     const menuActivo = computed(() => store.state.Footer.menuActivo);
     const modoActual = computed(() => store.state.modoActual);
     const infoCliente = computed(() => store.state.Clientes.infoCliente);
-
+    const GLOVO = store.getters['Clientes/getGlovo'];
+    const DELIVEROO = store.getters['Clientes/getDeliveroo'];
     let toastElList = null;
     let toastList = null;
     let inicioMagic = null;
@@ -215,6 +228,10 @@ export default {
         }
       });
     }
+
+    const thisIsCatalunya = computed(() => {
+      return getTotal.value.replace('.', ',');
+    });
 
     function goToCobrar() {
       router.push(`/cobro/${getTotal.value}`);
@@ -313,6 +330,9 @@ export default {
     }
 
     return {
+      GLOVO,
+      DELIVEROO,
+      thisIsCatalunya,
       infoCliente,
       modoActual,
       touchStart,
