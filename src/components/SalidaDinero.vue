@@ -23,7 +23,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" @click="volverACaja()">
+                    <button type="button" data-bs-dismiss="modal" class="btn btn-primary">
                         VOLVER
                     </button>
                     <button type="button" class="btn btn-danger" @click="confirmarSalida()">

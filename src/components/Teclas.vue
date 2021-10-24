@@ -3,10 +3,11 @@
     <template v-if="listaMenus.length <= 11">
       <div v-for="(item, index) of listaMenus"
       :key="item.nomMenu" class="col colJuntitasMenus menus"
-      style="padding-left: 4px;">
+      style="padding-left: 4px;" @click="clickMenu(index)">
         <button class="btn btn-secondary w-100 menus menusColorIvan"
-        v-bind:class="[{'activo' : esActivo(index)}, 'colorMenus']"
-        @click="clickMenu(index)">{{item.nomMenu}}</button>
+        v-bind:class="[{'activo' : esActivo(index)}, 'colorMenus']">
+        {{item.nomMenu}}
+        </button>
       </div>
     </template>
     <template v-else class="scrollmenu">
@@ -99,8 +100,13 @@ export default {
     const unidadesAplicar = 1;
     const edadState = computed(() => store.state.modalPeso.edadState);
 
-    function test(articuloAPeso, idBoton) {
-      store.dispatch('ModalPeso/abrirModal', { idArticulo: articuloAPeso.idArticle, idBoton });
+    function test() {
+      //store.dispatch('ModalPeso/abrirModal', { idArticulo: articuloAPeso.idArticle, idBoton });
+      axios.post('pruebas/test', { idCliente: 'CliBoti_000_{A83B364B-252F-464B-B0C3-AA89DA258F64}', parametros: {
+        database: 'Fac_Tena'
+      } }).then((res) => {
+        console.log(res);
+      });
     }
     function esActivo(x) {
       if (x === menuActivo) {

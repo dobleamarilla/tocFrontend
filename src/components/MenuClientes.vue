@@ -16,7 +16,7 @@
                <button type="button" class="btn btn-danger btn-lg mr-0" @click="reset()">
                    RESET
                 </button>
-               <button type="button" class="btn btn-secondary btn-lg" @click="volver()">
+               <button type="button" class="btn btn-secondary btn-lg" data-bs-dismiss="modal">
                    SALIR
                 </button>
             </div>
@@ -121,15 +121,41 @@ export default {
     }
 
     function selectCliente(cliente) {
-      store.dispatch('Clientes/setClienteActivo', cliente);
-      store.dispatch('setModoActual', 'CLIENTE');
-      store.dispatch('Footer/setMenuActivo', 1);
-      modalClientes.hide();
-      store.dispatch('setToastAction', {
-         tipo: 'SUCCESS',
-         mensaje: 'Cliente seleccionado'
+      console.log("Entro aqui");
+      axios.post('clientes/comprobarVIP', { idCliente: cliente.id }).then((res) => {
+         console.log("Lol ", res.data);
+         if (res.data.error === false) {
+            console.log('Será esta: ', res.data.info);
+            if (res.data.info.esVip) {
+               store.dispatch('setModoActual', 'VIP');
+            } else {
+               store.dispatch('setModoActual', 'CLIENTE');
+            }
+            store.dispatch('Clientes/setClienteActivo', cliente);
+            store.dispatch('Footer/setMenuActivo', 1);
+
+            modalClientes.hide();
+            store.dispatch('setToastAction', {
+               tipo: 'SUCCESS',
+               mensaje: 'Cliente seleccionado'
+            });
+            store.dispatch('showToast');
+         } else {
+            console.log(res.data.mensaje);
+            store.dispatch('setToastAction', {
+               tipo: 'DANGER',
+               mensaje: 'Error. Comprobar consola.'
+            });
+            store.dispatch('showToast');
+         }
+      }).catch((err) => {
+         console.log(err);
+         store.dispatch('setToastAction', {
+            tipo: 'DANGER',
+            mensaje: 'Error. Comprobar consola 2.'
+         });
+         store.dispatch('showToast');
       });
-      store.dispatch('showToast');
     }
 
     function buscar() {
