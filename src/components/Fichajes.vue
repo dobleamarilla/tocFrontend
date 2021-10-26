@@ -41,7 +41,7 @@
                             <tbody>
                                 <tr v-for="(trabajador, index) of arrayTrabajadores" v-bind:key="index">
                                     <td>{{trabajador.nombre}}</td>
-                                    <td v-if="trabajador.fichado === false"><a href="#" class="btn btn-outline-primary btn_fc" @click="fichar(trabajador, index)">FICHAR</a></td>
+                                    <td v-if="trabajador.fichado === false || trabajador.fichado == undefined"><a href="#" class="btn btn-outline-primary btn_fc" @click="fichar(trabajador, index)">FICHAR</a></td>
                                     <td v-else><a href="#" class="btn btn-outline-success btn_fc" @click="desfichar(trabajador, index)">DESFICHAR</a></td>
                                 </tr>
                             </tbody>
@@ -80,7 +80,6 @@ export default {
         }
 
         function buscar() {
-            console.log(inputBusqueda.value);
             axios.post('trabajadores/buscar', { busqueda: inputBusqueda.value }).then((res) => {
                 arrayTrabajadores.value = res.data;
             }).catch((err) => {

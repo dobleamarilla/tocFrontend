@@ -1,5 +1,4 @@
 <template>
-<button @click="test()">TESTIABLE</button>
   <div class="row p-2" id="menusColores">
     <template v-if="listaMenus.length <= 11">
       <div v-for="(item, index) of listaMenus" :key="item.nomMenu" @click="clickMenu(index)" class="col colJuntitasMenus menus" style="padding-left: 4px;">

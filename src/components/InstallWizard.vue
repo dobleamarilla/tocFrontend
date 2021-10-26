@@ -49,7 +49,7 @@
 
   <div v-if="segundaParte" class="row">
     <p style="font-size: 20px; font-weight: bold; color: green">¡Datos correctos! Espera mientras se descargan los datos del TPV.</p>
-    <img src="../assets/imagenes/loadingNew.gif"
+    <img v-if="esperando" src="../assets/imagenes/loadingNew.gif"
     style="display:block;margin:auto;width:300px"
     alt="Esperando respuesta del servidor">
   </div>
@@ -63,15 +63,15 @@
 </template>
 
 <script>
-import { onMounted, ref } from 'vue';
-import { useStore } from 'vuex';
+import { ref } from 'vue';
 import axios from 'axios';
+import router from '../router/index';
 // import { parametros } from '../services/parametros';
 
 export default {
   name: 'InstallWizard',
   setup() {
-    const store = useStore();
+    // const store = useStore();
     const licencia = ref('');
     const password = ref('');
     const tipoImpresora = ref('USB');
@@ -81,20 +81,20 @@ export default {
     const primeraParte = ref(true);
     const segundaParte = ref(false);
 
-    onMounted(() => {
-      store.dispatch('InstallWizard/copyInitialData').then((res) => {
-        licencia.value = res.licencia;
-        password.value = res.password;
-        tipoImpresora.value = res.tipoImpresora;
-        tipoDatafono.value = res.tipoDatafono;
-        impresoraCafeteria.value = res.impresoraCafeteria;
-      });
-    });
+    // onMounted(() => {
+    //   store.dispatch('InstallWizard/copyInitialData').then((res) => {
+    //     licencia.value = res.licencia;
+    //     password.value = res.password;
+    //     tipoImpresora.value = res.tipoImpresora;
+    //     tipoDatafono.value = res.tipoDatafono;
+    //     impresoraCafeteria.value = res.impresoraCafeteria;
+    //   });
+    // });
 
     function testPrint() {
       console.log(`La password es: ${password.value} y la licencia: ${licencia.value}`);
     }
-    function confirmar() {
+    async function confirmar() {
       esperando.value = true;
       const lol = {
         parametros: {
@@ -105,29 +105,41 @@ export default {
           impresoraCafeteria: impresoraCafeteria.value,
         },
       };
+      console.log(lol);
+      try {
+        const res = await axios.post('/instalador/pedirDatos', {
+          password: lol.parametros.password,
+          numLlicencia: lol.parametros.licencia,
+          tipoImpresora: lol.parametros.tipoImpresora,
+          tipoDatafono: lol.parametros.tipoDatafono,
+          impresoraCafeteria: lol.parametros.impresoraCafeteria
+        });
 
-      axios.post('/instalador/pedirDatos', {
-        password: lol.parametros.password,
-        numLlicencia: lol.parametros.licencia
-      }).then((res) => {
         if (!res.data.error) {
-          console.log(res.data.info);
-          esperando.value = false;
           primeraParte.value = false;
           segundaParte.value = true;
+          const res2 = await axios.post('instalador/descargarTodo');
+          if (res2.data.error === false) {
+            router.push('/');
+            esperando.value = false;
+          } else {
+            esperando.value = false;
+            alert(res2.data.mensaje);
+          }
         } else {
           esperando.value = false;
           alert(res.data.mensaje);
-        }        
-      }).catch((err) => {
+        }
+      } catch(err) {
         console.log(err);
         esperando.value = false;
-      });
+        alert("Ha habido un error. Comprueba el log");
+      }
     }
 
-    onMounted(() => {
-      store.dispatch('InstallWizard/setModal');
-    });
+    // onMounted(() => {
+    //   store.dispatch('InstallWizard/setModal');
+    // });
 
     return {
       primeraParte,
