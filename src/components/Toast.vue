@@ -1,6 +1,6 @@
 <template>
   <div class="toast-container position-absolute p-3
-   top-0 start-50 translate-middle-x" role="alert"
+   bottom-0 start-50 translate-middle-x" role="alert"
     aria-live="assertive" aria-atomic="true">
     <div class="toast" :class="{
         'text-white bg-primary': tipoToast == 'PRIMARY',

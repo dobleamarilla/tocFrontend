@@ -13,6 +13,11 @@ const routes = [
     component: () => import('../views/Cobro.vue'),
   },
   {
+    path: '/installWizard',
+    name: 'InstallWizard',
+    component: () => import('../views/InstallWizard.vue'),
+  },
+  {
     path: '/abrirCaja',
     name: 'Abrir Caja',
     component: () => import('../views/AbrirCaja.vue'),

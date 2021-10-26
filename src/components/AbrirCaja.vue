@@ -133,6 +133,10 @@
         @click="abrirModalConfirmacion()">
         ABRIR CON {{getTotal.toFixed(2)}} €
       </button>
+
+      <button @click="volver()" class="btn btn-warning ms-2" style="font-size: 27px;">
+        VOLVER
+      </button>
     </div>
   </div>
 
@@ -234,6 +238,11 @@ export default {
       activo.value = x;
     }
 
+    function volver() {
+      router.push('/menu/caja');
+    }
+
+
     function addNumero(x) {
       infoDinero.value[activo.value].valor = Number(
         infoDinero.value[activo.value].valor.toString() + x,
@@ -301,6 +310,7 @@ export default {
     });
 
     return {
+      volver,
       infoDinero,
       activo,
       totalClearOne,

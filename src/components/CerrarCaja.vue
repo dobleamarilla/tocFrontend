@@ -139,6 +139,10 @@
             @click="abrirModalConfirmacion()">
             CERRAR CON {{getTotal.toFixed(2)}} €
           </button>
+
+          <button @click="volver()" class="btn btn-warning ms-2" style="font-size: 27px;">
+            VOLVER
+          </button>
         </div>
       </div>
     </div>
@@ -265,6 +269,10 @@ export default {
       cantidad3G.value = 0;
     }
 
+    function volver() {
+      router.push('/menu/caja');
+    }
+
     function cerrarCaja() {
       axios.post('/caja/cerrarCaja', {
         total: getTotal.value,
@@ -307,6 +315,7 @@ export default {
     });
 
     return {
+      volver,
       infoDinero,
       activo,
       totalClearOne,

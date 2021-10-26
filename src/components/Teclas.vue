@@ -1,12 +1,10 @@
 <template>
+<button @click="test()">TESTIABLE</button>
   <div class="row p-2" id="menusColores">
     <template v-if="listaMenus.length <= 11">
-      <div v-for="(item, index) of listaMenus"
-      :key="item.nomMenu" class="col colJuntitasMenus menus"
-      style="padding-left: 4px;" @click="clickMenu(index)">
-        <button class="btn btn-secondary w-100 menus menusColorIvan"
-        v-bind:class="[{'activo' : esActivo(index)}, 'colorMenus']">
-        {{item.nomMenu}}
+      <div v-for="(item, index) of listaMenus" :key="item.nomMenu" @click="clickMenu(index)" class="col colJuntitasMenus menus" style="padding-left: 4px;">
+        <button class="btn btn-secondary w-100 menus menusColorIvan colorMenus" v-bind:class="[{'activo' : esActivo(index)}]">
+          {{item.nomMenu}}
         </button>
       </div>
     </template>
@@ -84,6 +82,7 @@ export default {
     const cesta = computed(() => store.state.Cesta.cesta);
     const cajaAbierta = computed(() => store.state.Caja.cajaAbierta);
     const listaMenus = ref([{ nomMenu: '' }]);
+    let clickMenuBloqueado = false;
     const listaPrecios = ref([{
       _id: -1,
       nombre: '',
@@ -101,12 +100,13 @@ export default {
     const edadState = computed(() => store.state.modalPeso.edadState);
 
     function test() {
-      //store.dispatch('ModalPeso/abrirModal', { idArticulo: articuloAPeso.idArticle, idBoton });
-      axios.post('pruebas/test', { idCliente: 'CliBoti_000_{A83B364B-252F-464B-B0C3-AA89DA258F64}', parametros: {
-        database: 'Fac_Tena'
-      } }).then((res) => {
-        console.log(res);
-      });
+      // //store.dispatch('ModalPeso/abrirModal', { idArticulo: articuloAPeso.idArticle, idBoton });
+      // axios.post('pruebas/test', { idCliente: 'CliBoti_000_{A83B364B-252F-464B-B0C3-AA89DA258F64}', parametros: {
+      //   database: 'Fac_Tena'
+      // } }).then((res) => {
+      //   console.log(res);
+      // });
+      axios.post('pruebas/test');
     }
     function esActivo(x) {
       if (x === menuActivo) {
@@ -430,14 +430,23 @@ export default {
       }
     }
     function clickMenu(index) {
-      axios.post('/menus/clickMenu', { nombreMenu: listaMenus.value[index].nomMenu }).then((res) => {
-        if (!res.data.bloqueado) {
-          menuActivo = index;
-          cargarTeclado(res.data.resultado);
-        } else {
-          console.log('EN ESTE MOMENTO NO ES POSIBLE CARGAR EL TECLADO');
-        }
-      });
+      if (!clickMenuBloqueado) {
+        clickMenuBloqueado = true;
+        axios.post('/menus/clickMenu', { nombreMenu: listaMenus.value[index].nomMenu }).then((res) => {
+          if (!res.data.bloqueado) {
+            menuActivo = index;
+            clickMenuBloqueado = false;
+            cargarTeclado(res.data.resultado);
+          } else {
+            console.log('Pero donde vas, Rayo McQueen');
+          }
+        }).catch((err) => {
+          console.log(err);
+          clickMenuBloqueado = false;
+        });
+      } else {
+        console.log('Estoy bloqueado');
+      }
     }
     function clickTecla(objListadoTeclas, esAPeso = false) {
       if (!esAPeso) {
