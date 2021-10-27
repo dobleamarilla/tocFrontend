@@ -13,7 +13,7 @@
         'text-white bg-dark': tipoToast == 'DARK'
     }">
       <div class="d-flex">
-        <div class="toast-body">
+        <div class="toast-body sizeToast">
           {{mensajeToast}}
         </div>
         <button type="button" class="btn-close
@@ -51,3 +51,10 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+  .sizeToast {
+    font-size: 25px;
+    font-weight: bold;
+  }
+</style>

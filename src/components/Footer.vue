@@ -233,8 +233,58 @@ export default {
       return getTotal.value.replace('.', ',');
     });
 
+    function crearTicketDeuda(total, idCesta, idClienteFinal, infoClienteVip) {
+      axios.post('tickets/crearTicketDeuda', {
+        total: Number(total),
+        idCesta: idCesta,
+        idCliente: idClienteFinal,
+        infoClienteVip: infoClienteVip
+      }).then((res) => {
+        if (!res.data.error) {
+          axios.post('/cestas/getCesta').then((res) => {
+            store.dispatch('Cesta/setCestaAction', res.data);
+          });
+          store.dispatch('setModoActual', 'NORMAL');
+          store.dispatch('Clientes/resetClienteActivo');
+          store.dispatch('Footer/resetMenuActivo');
+          store.dispatch('setToastAction', {
+            tipo: 'SUCCESS',
+            mensaje: '¡Ticket en modo DEUDA creado!',
+          });
+          store.dispatch('showToast');
+
+        } else {
+          store.dispatch('setToastAction', {
+            tipo: 'DANGER',
+            mensaje: 'Error al insertar el ticket.',
+          });
+          store.dispatch('showToast');
+        }
+      }).catch((err) => {
+        console.log(err);
+        store.dispatch('setToastAction', {
+          tipo: 'DANGER',
+          mensaje: 'Error al insertar el ticket.',
+        });
+        store.dispatch('showToast');
+      });
+    }
+
     function goToCobrar() {
-      router.push(`/cobro/${getTotal.value}`);
+      let pagaEnTienda = store.getters['Clientes/getClientePagaEnTienda'];
+      let modoActual = store.getters['getModoActual'];
+      let infoClienteVip = store.getters['Clientes/getInfoClienteVip'];
+      let idClienteFinal = store.getters['Clientes/getInfoCliente'];
+      let idCesta = store.getters['Cesta/getCestaId'];
+      console.log(pagaEnTienda);
+      /* Si se cumple que es VIP y no paga en tienda, se crea la deuda, sino, cobro normal */
+      if (pagaEnTienda == true) {
+        router.push(`/cobro/${getTotal.value}`);
+      } else if(modoActual == 'VIP' && pagaEnTienda == false) {
+        crearTicketDeuda(Number(getTotal.value), idCesta, idClienteFinal, infoClienteVip);
+      } else {
+        console.log('Caso NO CONTROLADO');
+      }
     }
 
     function cambiarMenu() {

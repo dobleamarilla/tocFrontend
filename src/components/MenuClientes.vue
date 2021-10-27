@@ -122,15 +122,25 @@ export default {
 
     function selectCliente(cliente) {
       console.log("Entro aqui");
-      axios.post('clientes/comprobarVIP', { idCliente: cliente.id }).then((res) => {
+      axios.post('clientes/comprobarVIP', { idClienteFinal: cliente.id }).then((res) => {
          console.log("Lol ", res.data);
          if (res.data.error === false) {
             console.log('Será esta: ', res.data.info);
+
+            /* SET PAGA EN TIENDA */
+            if (res.data.info.pagaEnTienda == false) {
+               cliente['pagaEnTienda'] = false;
+            }
+
+            /* SET MODO CLIENTE */
             if (res.data.info.esVip) {
+               store.dispatch('Clientes/setInfoClienteVip', res.data.info.datosCliente);
                store.dispatch('setModoActual', 'VIP');
             } else {
                store.dispatch('setModoActual', 'CLIENTE');
             }
+
+            /* SET RESTO DE DATOS CLIENTE */
             store.dispatch('Clientes/setClienteActivo', cliente);
             store.dispatch('Footer/setMenuActivo', 1);
 
