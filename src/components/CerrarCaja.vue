@@ -1,150 +1,142 @@
 <template>
-  <div class="modal" id="vueModalClausura" tabindex="-1" role="dialog">
-    <div class="modal-dialog" style="max-width:80%" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">CERRAR CAJA</h5>
-        </div>
-        <div class="modal-body">
-          <div class="row p-2" style="text-align: center">
-            <div class="col" @click="setActivo(0)">
-              <img src="../assets/imagenes/1cts.png" width="84" height="84">
-              <label :class="{'infoDineros': activo == 0}">
-              {{infoDinero[0].valor}} unidades
-              </label>
-            </div>
-            <div class="col" @click="setActivo(1)">
-              <img src="../assets/imagenes/2cts.png" width="84" height="84">
-              <label :class="{'infoDineros': activo == 1}">
-              {{infoDinero[1].valor}} unidades
-              </label>
-            </div>
-            <div class="col" @click="setActivo(2)">
-              <img src="../assets/imagenes/5cts.png" width="84" height="84">
-              <label :class="{'infoDineros': activo == 2}">
-              {{infoDinero[2].valor}} unidades
-              </label>
-            </div>
-            <div class="col" @click="setActivo(3)">
-              <img src="../assets/imagenes/10cts.png" width="84" height="84">
-              <label :class="{'infoDineros': activo == 3}">
-              {{infoDinero[3].valor}} unidades
-              </label>
-            </div>
-            <div class="col" @click="setActivo(4)">
-              <img src="../assets/imagenes/20cts.png" width="84" height="84">
-              <label :class="{'infoDineros': activo == 4}">
-              {{infoDinero[4].valor}} unidades
-              </label>
-            </div>
-            <div class="col" @click="setActivo(5)">
-              <img src="../assets/imagenes/50cts.png" width="84" height="84">
-              <label :class="{'infoDineros': activo == 5}">
-              {{infoDinero[5].valor}} unidades
-              </label>
-            </div>
-            <div class="col" @click="setActivo(6)">
-              <img src="../assets/imagenes/uneuro.png" width="84" height="84">
-              <label :class="{'infoDineros': activo == 6}">
-              {{infoDinero[6].valor}} unidades
-              </label>
-            </div>
-            <div class="col" @click="setActivo(7)">
-              <img src="../assets/imagenes/doseuros.png" width="84" height="84">
-              <label :class="{'infoDineros': activo == 7}">
-              {{infoDinero[7].valor}} unidades
-              </label>
-            </div>
-          </div>
-          <div class="row mx-auto p-2">
-            <div class="col" style="text-align: center;" @click="setActivo(8)">
-              <img src="../assets/imagenes/5euros.png"
-                :width="sizeBilletes">
-              <label :class="{'infoDineros': activo == 8}">
-              {{infoDinero[8].valor}} unidades
-              </label>
-            </div>
-            <div class="col" style="text-align: center;" @click="setActivo(9)">
-              <img src="../assets/imagenes/10euros.png"
-                :width="sizeBilletes">
-              <label :class="{'infoDineros': activo == 9}">
-              {{infoDinero[9].valor}} unidades
-              </label>
-            </div>
-            <div class="col" style="text-align: center;" @click="setActivo(10)">
-              <img src="../assets/imagenes/20euros.png"
-                :width="sizeBilletes">
-              <label :class="{'infoDineros': activo == 10}">
-              {{infoDinero[10].valor}} unidades
-              </label>
-            </div>
-            <div class="col" style="text-align: center;" @click="setActivo(11)">
-              <img src="../assets/imagenes/50euros.png"
-                :width="sizeBilletes">
-              <label :class="{'infoDineros': activo == 11}">
-              {{infoDinero[11].valor}} unidades
-              </label>
-            </div>
-            <div class="col" style="text-align: center;" @click="setActivo(12)">
-              <img src="../assets/imagenes/100euros.png"
-                :width="sizeBilletes">
-              <label :class="{'infoDineros': activo == 12}">
-              {{infoDinero[12].valor}} unidades
-              </label>
-            </div>
-            <div class="col" style="text-align: center;" @click="setActivo(13)">
-              <img src="../assets/imagenes/200euros.png"
-                :width="sizeBilletes">
-              <label :class="{'infoDineros': activo == 13}">
-              {{infoDinero[13].valor}} unidades
-              </label>
-            </div>
-            <div class="col" style="text-align: center;" @click="setActivo(14)">
-              <img src="../assets/imagenes/500euros.png"
-                :width="sizeBilletes">
-              <label
-                :class="{'infoDineros': activo == 14}">
-              {{infoDinero[14].valor}} unidades
-              </label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="mx-auto">
-              <a class="boton" @click="addNumero(0)">0</a>
-              <a class="boton" @click="addNumero(1)">1</a>
-              <a class="boton" @click="addNumero(2)">2</a>
-              <a class="boton" @click="addNumero(3)">3</a>
-              <a class="boton" @click="addNumero(4)">4</a>
-              <a class="boton" @click="addNumero(5)">5</a>
-              <a class="boton" @click="addNumero(6)">6</a>
-              <a class="boton" @click="addNumero(7)">7</a>
-              <a class="boton" @click="addNumero(8)">8</a>
-              <a class="boton" @click="addNumero(9)">9</a>
-              <a class="boton" @click="borrarNumero()">&lt;</a>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <div class="input-group position-absolute bottom-0 start-0 mb-2 ms-2">
-            <!-- <span class="input-group-text">Cantidad 3G</span>
-            <input type="number" v-model="cantidad3G"
-              style="font-size: 30px; max-width: 380px; height: 70px;"> -->
-          </div>
-          <button class="btn btn-danger" style="font-size: 27px;"
-            @click="resetTodo()">
-            RESET LIMPIAR TODO
-          </button>
+  <div class="container-fluid">
+    <div class="row">
+      <h2>CERRAR CAJA</h2>
+    </div>
 
-          <button class="btn btn-primary" style="font-size: 27px;"
-            @click="abrirModalConfirmacion()">
-            CERRAR CON {{getTotal.toFixed(2)}} €
-          </button>
-
-          <button @click="volver()" class="btn btn-warning ms-2" style="font-size: 27px;">
-            VOLVER
-          </button>
-        </div>
+    <div class="row p-2" style="text-align: center">
+      <div class="col" @click="setActivo(0)">
+        <img src="../assets/imagenes/1cts.png" width="84" height="84">
+        <label :class="{'infoDineros': activo == 0, 'unidadesSize': true }">
+        {{infoDinero[0].valor}} unidades
+        </label>
       </div>
+      <div class="col" @click="setActivo(1)">
+        <img src="../assets/imagenes/2cts.png" width="84" height="84">
+        <label :class="{'infoDineros': activo == 1, 'unidadesSize' : true}">
+        {{infoDinero[1].valor}} unidades
+        </label>
+      </div>
+      <div class="col" @click="setActivo(2)">
+        <img src="../assets/imagenes/5cts.png" width="84" height="84">
+        <label :class="{'infoDineros': activo == 2, 'unidadesSize' : true}">
+        {{infoDinero[2].valor}} unidades
+        </label>
+      </div>
+      <div class="col" @click="setActivo(3)">
+        <img src="../assets/imagenes/10cts.png" width="84" height="84">
+        <label :class="{'infoDineros': activo == 3, 'unidadesSize' : true}">
+        {{infoDinero[3].valor}} unidades
+        </label>
+      </div>
+      <div class="col" @click="setActivo(4)">
+        <img src="../assets/imagenes/20cts.png" width="84" height="84">
+        <label :class="{'infoDineros': activo == 4, 'unidadesSize' : true}">
+        {{infoDinero[4].valor}} unidades
+        </label>
+      </div>
+      <div class="col" @click="setActivo(5)">
+        <img src="../assets/imagenes/50cts.png" width="84" height="84">
+        <label :class="{'infoDineros': activo == 5, 'unidadesSize' : true}">
+        {{infoDinero[5].valor}} unidades
+        </label>
+      </div>
+      <div class="col" @click="setActivo(6)">
+        <img src="../assets/imagenes/uneuro.png" width="84" height="84">
+        <label :class="{'infoDineros': activo == 6, 'unidadesSize' : true}">
+        {{infoDinero[6].valor}} unidades
+        </label>
+      </div>
+      <div class="col" @click="setActivo(7)">
+        <img src="../assets/imagenes/doseuros.png" width="84" height="84">
+        <label :class="{'infoDineros': activo == 7, 'unidadesSize' : true}">
+        {{infoDinero[7].valor}} unidades
+        </label>
+      </div>
+    </div>
+
+    <div class="row mx-auto mt-4">
+      <div class="col" style="text-align: center;" @click="setActivo(8)">
+        <img src="../assets/imagenes/5euros.png"
+          :width="sizeBilletes"> <br>
+        <label :class="{'infoDineros': activo == 8, 'unidadesSize' : true}">
+        {{infoDinero[8].valor}} unidades
+        </label>
+      </div>
+      <div class="col" style="text-align: center;" @click="setActivo(9)">
+        <img src="../assets/imagenes/10euros.png"
+          :width="sizeBilletes"> <br>
+        <label :class="{'infoDineros': activo == 9, 'unidadesSize' : true}">
+        {{infoDinero[9].valor}} unidades
+        </label>
+      </div>
+      <div class="col" style="text-align: center;" @click="setActivo(10)">
+        <img src="../assets/imagenes/20euros.png"
+          :width="sizeBilletes"> <br>
+        <label :class="{'infoDineros': activo == 10, 'unidadesSize' : true}">
+        {{infoDinero[10].valor}} unidades
+        </label>
+      </div>
+      <div class="col" style="text-align: center;" @click="setActivo(11)">
+        <img src="../assets/imagenes/50euros.png"
+          :width="sizeBilletes"> <br>
+        <label :class="{'infoDineros': activo == 11, 'unidadesSize' : true}">
+        {{infoDinero[11].valor}} unidades
+        </label>
+      </div>
+      <div class="col" style="text-align: center;" @click="setActivo(12)">
+        <img src="../assets/imagenes/100euros.png"
+          :width="sizeBilletes"> <br>
+        <label :class="{'infoDineros': activo == 12, 'unidadesSize' : true}">
+        {{infoDinero[12].valor}} unidades
+        </label>
+      </div>
+      <div class="col" style="text-align: center;" @click="setActivo(13)">
+        <img src="../assets/imagenes/200euros.png"
+          :width="sizeBilletes"> <br>
+        <label :class="{'infoDineros': activo == 13, 'unidadesSize' : true}">
+        {{infoDinero[13].valor}} unidades
+        </label>
+      </div>
+      <div class="col" style="text-align: center;" @click="setActivo(14)">
+        <img src="../assets/imagenes/500euros.png"
+          :width="sizeBilletes"> <br>
+        <label
+          :class="{'infoDineros': activo == 14, 'unidadesSize' : true}">
+        {{infoDinero[14].valor}} unidades
+        </label>
+      </div>
+    </div>
+
+    <div class="row mx-auto mt-5">
+      <div class="text-center">
+        <a class="boton" @click="addNumero(0)">0</a>
+        <a class="boton" @click="addNumero(1)">1</a>
+        <a class="boton" @click="addNumero(2)">2</a>
+        <a class="boton" @click="addNumero(3)">3</a>
+        <a class="boton" @click="addNumero(4)">4</a>
+        <a class="boton" @click="addNumero(5)">5</a>
+        <a class="boton" @click="addNumero(6)">6</a>
+        <a class="boton" @click="addNumero(7)">7</a>
+        <a class="boton" @click="addNumero(8)">8</a>
+        <a class="boton" @click="addNumero(9)">9</a>
+        <a class="boton" @click="borrarNumero()">&lt;</a>
+      </div>
+    </div>
+    
+    <div class="input-group position-absolute bottom-0 start-0 mb-4 ms-2">
+      <button class="btn btn-danger ms-2" style="font-size: 27px;"
+        @click="resetTodo()">
+        RESET LIMPIAR TODO
+      </button>
+      <button class="btn btn-primary ms-2" style="font-size: 27px;"
+        @click="abrirModalConfirmacion()">
+        CERRAR CON {{getTotal.toFixed(2)}} €
+      </button>
+
+      <button @click="volver()" class="btn btn-warning ms-2" style="font-size: 27px;">
+        VOLVER
+      </button>
     </div>
   </div>
 
@@ -159,7 +151,7 @@
           <button type="button"
             @click="cerrarCaja()"
             class="btn btn-success w-100" style="font-size: 40px">
-          Confirmar cierre
+          Confirmar
           </button>
         </div>
       </div>
@@ -171,10 +163,13 @@ import { ref, computed, onMounted } from 'vue';
 import { Modal } from 'bootstrap';
 import axios from 'axios';
 import router from '../router/index';
+import { useStore } from 'vuex';
 
 export default {
-  name: 'CerrarCaja',
+  name: 'AbrirCajaComponent',
   setup() {
+    const store = useStore();
+    const cajaAbierta = computed(() => store.state.Caja.cajaAbierta);
     const infoDinero = ref([
       { valor: 0, style: '' },
       { valor: 0, style: '' },
@@ -194,9 +189,10 @@ export default {
     ]);
     const activo = ref(0);
     const totalClearOne = 0;
-    const sizeBilletes = '100';
+    const sizeBilletes = '160';
     const cantidad3G = ref(0);
     let modalConfirmacionClausura = null;
+    let modalClausura = null;
     const getTotal = computed(() => {
       let total = 0;
       total += infoDinero.value[0].valor * 0.01;
@@ -242,6 +238,11 @@ export default {
       activo.value = x;
     }
 
+    function volver() {
+      router.push('/menu/caja');
+    }
+
+
     function addNumero(x) {
       infoDinero.value[activo.value].valor = Number(
         infoDinero.value[activo.value].valor.toString() + x,
@@ -269,28 +270,24 @@ export default {
       cantidad3G.value = 0;
     }
 
-    function volver() {
-      router.push('/menu/caja');
-    }
-
     function cerrarCaja() {
       axios.post('/caja/cerrarCaja', {
         total: getTotal.value,
         detalle: getDetalle.value,
         infoDinero: infoDinero.value,
-        cantidad3G: cantidad3G.value,
+        cantidad3G: 0
       }).then((res) => {
         if (!res.data.error) {
-          console.log('Cierre OK');
-          alert('¡Cierre de caja OK!');
-          // router.push('/menu/caja');
-          router.go('/menu/caja');
+          console.log('Cerrar caja OK');
+          modalConfirmacionClausura.hide();
+          store.dispatch('Caja/setEstadoCaja', false);
+          router.push('/');
         } else {
-          console.log('Cierre MALO');
+          console.log('Clausura ERROR');
         }
       }).catch((err) => {
         console.log(err);
-        alert('¡Error en el cierre! Contacta con informática.');
+        alert('¡Error en la cierre! Contacta con informática.');
       });
     }
 
@@ -346,4 +343,13 @@ export default {
         font-size: 60px;
         font-weight: bold;
     }
+  .botonesCalculadora {
+    background-color: #fff5e9;
+    color: #c95907;
+    border-width: 3px;
+    border: 1px solid #bf5c18;
+  }
+  .unidadesSize {
+    font-size: 25px;
+  }
 </style>

@@ -3,30 +3,6 @@
     <div class="col">
       <div class="row">
         <div class="table-responsive">
-        <!-- <table class="table table-striped table-responsive overflow-auto">
-              <thead>
-                <tr>
-                    <th scope="col">Número ticket</th>
-                    <th scope="col">Hora</th>
-                    <th scope="col">Forma de pago</th>
-                    <th scope="col">Total ({{total}} €)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(item, index) of listaTickets" v-bind:key={index}
-                @click="setTicketActivo(index)"
-                style="max-height: 60px;"
-                v-bind:class="{estiloActivoTicketCaja: index === activo}"
-                >
-                    <td style="text-align: center">{{item._id}}</td>
-                    <td>
-                      {{item.timestamp}}
-                      </td>
-                    <td>{{item.tipoPago}}</td>
-                    <td>{{item.total.toFixed(2)}} €</td>
-                </tr>
-            </tbody>
-        </table> -->
         <table class="table">
           <thead>
             <tr>
@@ -57,7 +33,7 @@
         <div class="col">
           <button type="button" class="btn btn-secondary
            botonesPrincipales w-100 btn-block botonesWidth"
-          data-bs-toggle="modal" data-bs-target="#vueModalClausura">
+           @click="goTo('/cerrarCaja')">
             <i class="bi bi-lock-fill iconosBootstrap"></i>
           </button>
         </div>
@@ -96,7 +72,7 @@
       <DetalleTicket :ticket="ticketInfo" />
     </div>
   </div>
-  <CerrarCaja />
+
   <SalidaDinero />
   <EntradaDinero />
 </template>
@@ -104,7 +80,6 @@
 <script>
 import { ref, onMounted } from 'vue';
 import DetalleTicket from '@/components/DetalleTicket.vue';
-import CerrarCaja from '@/components/CerrarCaja.vue';
 import SalidaDinero from '@/components/SalidaDinero.vue';
 import EntradaDinero from '@/components/EntradaDinero.vue';
 import axios from 'axios';
@@ -161,7 +136,6 @@ export default {
   },
   components: {
     DetalleTicket,
-    CerrarCaja,
     SalidaDinero,
     EntradaDinero,
   },

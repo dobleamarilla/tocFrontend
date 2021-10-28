@@ -28,6 +28,7 @@ import Caja from './modules/Caja';
 
 let toastElList = null;
 let toastList = null;
+let timeoutBorrar = null;
 
 window.addEventListener('contextmenu', function (e) { 
   // do something here... 
@@ -42,6 +43,7 @@ export default createStore({
       tipo: 'INFO',
       mensaje: '',
     },
+    toastActivo: false
   },
   getters: {
     getModoActual: (state) => state.modoActual,
@@ -56,6 +58,9 @@ export default createStore({
     },
     setParametrosMutation(state, payload) {
       state.parametros = payload;
+    },
+    setToastActivoMutation(state, payload) {
+      state.toastActivo = payload;
     }
   },
   actions: {
@@ -66,8 +71,14 @@ export default createStore({
     setToastAction({ commit }, payload) {
       commit('setToastMutation', payload);
     },
-    showToast() {
+    showToast({ commit }) {
       toastList[0].show();
+      commit('setToastActivoMutation', true);
+      clearTimeout(timeoutBorrar);
+      timeoutBorrar = setTimeout(() => {  commit('setToastActivoMutation', false); }, 2500);
+    },
+    hideToast({ commit }) {
+      commit('setToastActivoMutation', false);
     },
     setModoActual({ commit }, payload) {
       commit('setModoActualMutation', payload);

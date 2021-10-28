@@ -54,14 +54,14 @@ import { useStore } from 'vuex';
 import axios from 'axios';
 import ToastComponent from '@/components/Toast.vue';
 import router from '../router/index';
-import { parametros } from '../services/parametros';
+import { tocGame } from '../services/tocGame';
 
 export default {
   name: 'Menu',
   setup() {
     const store = useStore();
     const isHidden = computed(() => store.state.Menu.hidden);
-    const params = parametros.getParametros();
+    const params = tocGame.getParametros();
 
     function quitarActivoTicket() {
       store.dispatch('Ticket/setActivoAction', null);

@@ -1,6 +1,6 @@
 <template>
   <div class="toast-container position-absolute p-3
-   bottom-0 start-50 translate-middle-x" role="alert"
+   bottom-0 start-50 translate-middle-x" :class="{ 'oculto': toastActivo == false }" role="alert"
     aria-live="assertive" aria-atomic="true">
     <div class="toast" :class="{
         'text-white bg-primary': tipoToast == 'PRIMARY',
@@ -34,6 +34,7 @@ export default {
     const store = useStore();
     const tipoToast = computed(() => store.state.toast.tipo);
     const mensajeToast = computed(() => store.state.toast.mensaje);
+    const toastActivo = computed(() => store.state.toastActivo);
 
     function test() {
       store.dispatch('showToast');
@@ -47,6 +48,7 @@ export default {
       tipoToast,
       mensajeToast,
       test,
+      toastActivo
     };
   },
 };
@@ -56,5 +58,8 @@ export default {
   .sizeToast {
     font-size: 25px;
     font-weight: bold;
+  }
+  .oculto {
+    display: none;
   }
 </style>

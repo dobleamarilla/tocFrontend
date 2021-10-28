@@ -3,7 +3,36 @@
     <router-view/>
   </div>
 </template>
+<script>
+import { onMounted } from 'vue';
+import router from './router/index';
+import { tocGame } from './services/tocGame';
 
+export default {
+  setup() {
+    onMounted(() => {
+      tocGame.hayFichados().then((res) => {
+        if (res) {
+          tocGame.cajaAbierta().then((res2) => {
+            if (res2 == true) {
+              console.log('Hay fichados + caja abierta');
+            } else {
+              console.log('Hay fichados + caja cerrada');
+            }
+          }).catch((err) => {
+            console.log(err);
+          });
+        } else {
+          console.log('NO hay fichados');
+        }
+      }).catch((err) => {
+        console.log(err);
+      });
+      //router.push('/cobro/56');
+    });    
+  },
+}
+</script>
 <style>
   body {
     background-color: #fff5e9;

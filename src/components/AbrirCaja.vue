@@ -7,49 +7,49 @@
     <div class="row p-2" style="text-align: center">
       <div class="col" @click="setActivo(0)">
         <img src="../assets/imagenes/1cts.png" width="84" height="84">
-        <label :class="{'infoDineros': activo == 0}">
+        <label :class="{'infoDineros': activo == 0, 'unidadesSize': true }">
         {{infoDinero[0].valor}} unidades
         </label>
       </div>
       <div class="col" @click="setActivo(1)">
         <img src="../assets/imagenes/2cts.png" width="84" height="84">
-        <label :class="{'infoDineros': activo == 1}">
+        <label :class="{'infoDineros': activo == 1, 'unidadesSize': true }">
         {{infoDinero[1].valor}} unidades
         </label>
       </div>
       <div class="col" @click="setActivo(2)">
         <img src="../assets/imagenes/5cts.png" width="84" height="84">
-        <label :class="{'infoDineros': activo == 2}">
+        <label :class="{'infoDineros': activo == 2, 'unidadesSize': true }">
         {{infoDinero[2].valor}} unidades
         </label>
       </div>
       <div class="col" @click="setActivo(3)">
         <img src="../assets/imagenes/10cts.png" width="84" height="84">
-        <label :class="{'infoDineros': activo == 3}">
+        <label :class="{'infoDineros': activo == 3, 'unidadesSize': true }">
         {{infoDinero[3].valor}} unidades
         </label>
       </div>
       <div class="col" @click="setActivo(4)">
         <img src="../assets/imagenes/20cts.png" width="84" height="84">
-        <label :class="{'infoDineros': activo == 4}">
+        <label :class="{'infoDineros': activo == 4, 'unidadesSize': true }">
         {{infoDinero[4].valor}} unidades
         </label>
       </div>
       <div class="col" @click="setActivo(5)">
         <img src="../assets/imagenes/50cts.png" width="84" height="84">
-        <label :class="{'infoDineros': activo == 5}">
+        <label :class="{'infoDineros': activo == 5, 'unidadesSize': true }">
         {{infoDinero[5].valor}} unidades
         </label>
       </div>
       <div class="col" @click="setActivo(6)">
         <img src="../assets/imagenes/uneuro.png" width="84" height="84">
-        <label :class="{'infoDineros': activo == 6}">
+        <label :class="{'infoDineros': activo == 6, 'unidadesSize': true }">
         {{infoDinero[6].valor}} unidades
         </label>
       </div>
       <div class="col" @click="setActivo(7)">
         <img src="../assets/imagenes/doseuros.png" width="84" height="84">
-        <label :class="{'infoDineros': activo == 7}">
+        <label :class="{'infoDineros': activo == 7, 'unidadesSize': true }">
         {{infoDinero[7].valor}} unidades
         </label>
       </div>
@@ -59,42 +59,42 @@
       <div class="col" style="text-align: center;" @click="setActivo(8)">
         <img src="../assets/imagenes/5euros.png"
           :width="sizeBilletes"> <br>
-        <label :class="{'infoDineros': activo == 8}">
+        <label :class="{'infoDineros': activo == 8, 'unidadesSize': true }">
         {{infoDinero[8].valor}} unidades
         </label>
       </div>
       <div class="col" style="text-align: center;" @click="setActivo(9)">
         <img src="../assets/imagenes/10euros.png"
           :width="sizeBilletes"> <br>
-        <label :class="{'infoDineros': activo == 9}">
+        <label :class="{'infoDineros': activo == 9, 'unidadesSize': true }">
         {{infoDinero[9].valor}} unidades
         </label>
       </div>
       <div class="col" style="text-align: center;" @click="setActivo(10)">
         <img src="../assets/imagenes/20euros.png"
           :width="sizeBilletes"> <br>
-        <label :class="{'infoDineros': activo == 10}">
+        <label :class="{'infoDineros': activo == 10, 'unidadesSize': true }">
         {{infoDinero[10].valor}} unidades
         </label>
       </div>
       <div class="col" style="text-align: center;" @click="setActivo(11)">
         <img src="../assets/imagenes/50euros.png"
           :width="sizeBilletes"> <br>
-        <label :class="{'infoDineros': activo == 11}">
+        <label :class="{'infoDineros': activo == 11, 'unidadesSize': true }">
         {{infoDinero[11].valor}} unidades
         </label>
       </div>
       <div class="col" style="text-align: center;" @click="setActivo(12)">
         <img src="../assets/imagenes/100euros.png"
           :width="sizeBilletes"> <br>
-        <label :class="{'infoDineros': activo == 12}">
+        <label :class="{'infoDineros': activo == 12, 'unidadesSize': true }">
         {{infoDinero[12].valor}} unidades
         </label>
       </div>
       <div class="col" style="text-align: center;" @click="setActivo(13)">
         <img src="../assets/imagenes/200euros.png"
           :width="sizeBilletes"> <br>
-        <label :class="{'infoDineros': activo == 13}">
+        <label :class="{'infoDineros': activo == 13, 'unidadesSize': true }">
         {{infoDinero[13].valor}} unidades
         </label>
       </div>
@@ -102,7 +102,7 @@
         <img src="../assets/imagenes/500euros.png"
           :width="sizeBilletes"> <br>
         <label
-          :class="{'infoDineros': activo == 14}">
+          :class="{'infoDineros': activo == 14, 'unidadesSize': true }">
         {{infoDinero[14].valor}} unidades
         </label>
       </div>
@@ -346,5 +346,8 @@ export default {
     color: #c95907;
     border-width: 3px;
     border: 1px solid #bf5c18;
+  }
+  .unidadesSize {
+    font-size: 25px;
   }
 </style>
