@@ -16,6 +16,8 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 
 import 'bootstrap';
 
-axios.defaults.baseURL = 'http://localhost:3000'; // 'http://54.74.52.150:3000'; 
+
+// axios.defaults.baseURL = 'http://localhost:3000'; // BUILD PARA TPV
+axios.defaults.baseURL = 'http://54.74.52.150:3000'; // BUILD PARA SERVIDOR
 
 createApp(App).use(parametros).use(store).use(router).mount('#app');
