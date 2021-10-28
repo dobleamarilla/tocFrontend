@@ -41,7 +41,7 @@
         class="btn btn-secondary botonesPrincipales btn-sm ms-1 menusColorIvan"
           @click="borrar()">
           <i v-if='activo === null' class="bi bi-trash display-6"></i>
-          <i v-else @click="borrarItemCesta()" class="bi bi-x-lg display-6"></i>
+          <i v-else class="bi bi-x-lg display-6"></i>
         </button>
       </div>
 
@@ -54,7 +54,11 @@
       tipoCliente: modoActual === 'CLIENTE'
     }"
     style="max-width: 245px; max-height: 196px;">
-      <p v-if="modoActual != 'CLIENTE'">{{modoActual}}</p>
+      <p v-if="modoActual == 'VIP'" class="estiloVip">{{modoActual}}</p>
+      <p v-if="modoActual == 'CONSUMO PERSONAL'" class="estiloConsumoPersonal">CONSUMO</p>
+      <p v-if="modoActual == 'CONSUMO PERSONAL'" class="estiloConsumoPersonal">PERSONAL</p>
+      <p v-if="modoActual == 'DEVOLUCION'" class="tipoDevolucion">{{modoActual}}</p>
+      <p v-if="modoActual == 'NORMAL'" class="tipoNormal">{{modoActual}}</p>
       <p v-if="modoActual == 'CLIENTE'" class="infoCliente">
         4676 puntos
       </p>
@@ -270,20 +274,89 @@ export default {
       });
     }
 
+    function crearDevolucion(total, idCesta) {
+      axios.post('devoluciones/nuevaDevolucion', {total, idCesta}).then((res) => {
+        if (res.data.error == false) {
+          axios.post('/cestas/getCesta').then((res) => {
+            store.dispatch('Cesta/setCestaAction', res.data);
+          });
+          store.dispatch('setModoActual', 'NORMAL');
+          store.dispatch('Clientes/resetClienteActivo');
+          store.dispatch('Footer/resetMenuActivo');
+          store.dispatch('setToastAction', {
+            tipo: 'SUCCESS',
+            mensaje: '¡Devolución OK!.',
+          });
+          store.dispatch('showToast');
+        } else {
+          store.dispatch('setToastAction', {
+            tipo: 'DANGER',
+            mensaje: res.data.mensaje,
+          });
+          store.dispatch('showToast');
+        }
+      }).catch((err) => {
+        console.log(err);
+        store.dispatch('setToastAction', {
+          tipo: 'DANGER',
+          mensaje: 'Error, no se ha podido crear la devolución.',
+        });
+        store.dispatch('showToast');
+      });
+    }
+
+    function crearConsumoPersonal(idCesta) {
+      axios.post('tickets/crearTicketConsumoPersonal', {
+        idCesta: idCesta,
+      }).then((res) => {
+        if (!res.data.error) {
+          axios.post('/cestas/getCesta').then((res) => {
+            store.dispatch('Cesta/setCestaAction', res.data);
+          });
+          store.dispatch('setModoActual', 'NORMAL');
+          store.dispatch('Clientes/resetClienteActivo');
+          store.dispatch('Footer/resetMenuActivo');
+          store.dispatch('setToastAction', {
+            tipo: 'SUCCESS',
+            mensaje: 'Consumo personal OK!.',
+          });
+          store.dispatch('showToast');
+        } else {
+          store.dispatch('setToastAction', {
+            tipo: 'DANGER',
+            mensaje: 'Error al insertar el ticket.',
+          });
+          store.dispatch('showToast');
+        }
+      }).catch((err) => {
+        console.log(err);
+        store.dispatch('setToastAction', {
+          tipo: 'DANGER',
+          mensaje: 'Error al insertar el ticket..',
+        });
+        store.dispatch('showToast');
+      });
+    }
+
     function goToCobrar() {
       let pagaEnTienda = store.getters['Clientes/getClientePagaEnTienda'];
       let modoActual = store.getters['getModoActual'];
       let infoClienteVip = store.getters['Clientes/getInfoClienteVip'];
       let idClienteFinal = store.getters['Clientes/getInfoCliente'];
       let idCesta = store.getters['Cesta/getCestaId'];
-      console.log(pagaEnTienda);
+      
       /* Si se cumple que es VIP y no paga en tienda, se crea la deuda, sino, cobro normal */
-      if (pagaEnTienda == true) {
+      if ((pagaEnTienda == true && modoActual != 'DEVOLUCION' && modoActual != 'CONSUMO PERSONAL') || (modoActual == 'CLIENTE')) {
         router.push(`/cobro/${getTotal.value}`);
       } else if(modoActual == 'VIP' && pagaEnTienda == false) {
         crearTicketDeuda(Number(getTotal.value), idCesta, idClienteFinal, infoClienteVip);
-      } else {
-        console.log('Caso NO CONTROLADO');
+      }
+      if (modoActual == 'DEVOLUCION') {
+        crearDevolucion(Number(getTotal.value), idCesta);
+      }
+
+      if (modoActual == 'CONSUMO PERSONAL') {
+        crearConsumoPersonal(idCesta);
       }
     }
 
@@ -294,7 +367,7 @@ export default {
     onMounted(() => {
       /* SET MODO ACTUAL */
       if (modoActual.value == 'DEVOLUCION' || modoActual.value == 'CLIENTE') {
-        store.dispatch('Footer/setMenuActivo', 1)
+        store.dispatch('Footer/setMenuActivo', 1);
       }
       toastElList = [].slice.call(document.querySelectorAll('.toast'));
       toastList = toastElList.map((toastEl) => new Toast(toastEl));
@@ -359,7 +432,7 @@ export default {
         // ipcRenderer.send('mostrar-visor', {texto: "", p
         // recio: "", total: toc.getCesta().tiposIva.importe2, dependienta: ""});
       } else {
-        console.log('LALALAL');
+        
         // toc.borrarItemCesta(activo.value);
         // ipcRenderer.send('mostrar-visor', {texto: "", pre
         // cio: "", total: toc.getCesta().tiposIva.importe2, dependienta: ""});
@@ -509,5 +582,15 @@ export default {
 .infoCliente {
   color: #c95907;
   font-size: 23px;
+}
+.estiloVip {
+  color: #c95907;
+  font-size: 50px;
+  font-weight: bold;
+}
+.estiloConsumoPersonal {
+  color: #c95907;
+  font-size: 40px;
+  font-weight: bold;
 }
 </style>

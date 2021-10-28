@@ -435,14 +435,14 @@ export default {
       console.log('test vacío');
     }
     onMounted(() => {
-      socket.on('resDatafono', (data) => {
-        console.log(data);
-        if (!data.error) {
-          router.push('/');
-        } else {
-          console.log('Error: ', data.mensaje);
-        }
-      });
+      // socket.on('resDatafono', (data) => {
+      //   console.log(data);
+      //   if (!data.error) {
+      //     router.push('/');
+      //   } else {
+      //     console.log('Error: ', data.mensaje);
+      //   }
+      // });
       axios.post('/trabajadores/getTrabajadoresFichados').then((res) => {
         if (!res.data.error) {
           if (res.data.res.length > 0) {
@@ -453,6 +453,8 @@ export default {
         } else {
           console.log('Error!');
         }
+      }).catch((err) => {
+          console.log(err);
       });
     });
 
