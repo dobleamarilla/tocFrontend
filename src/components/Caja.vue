@@ -13,9 +13,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, index) of listaTickets" v-bind:key={index}
-            @click="setTicketActivo(index)"
-            v-bind:class="{estiloActivoTicketCaja: index === activo}"
+            <tr v-for="(item, index) of listaTickets.slice().reverse()" v-bind:key={index}
+            @click="setTicketActivo(item)"
+            v-bind:class="{estiloActivoTicketCaja: item._id === activo}"
             >
                 <td style="text-align: center">{{item._id}}</td>
                 <td>
@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import DetalleTicket from '@/components/DetalleTicket.vue';
 import SalidaDinero from '@/components/SalidaDinero.vue';
 import EntradaDinero from '@/components/EntradaDinero.vue';
@@ -96,9 +96,9 @@ export default {
     const ticketInfo = ref(null);
     const store = useStore();
 
-    function setTicketActivo(index) {
-      ticketInfo.value = listaTickets.value[index];
-      activo.value = index;
+    function setTicketActivo(ticket) {
+      ticketInfo.value = ticket;
+      activo.value = ticket._id;
     }
 
     function goTo(url) {
@@ -107,7 +107,7 @@ export default {
 
     function imprimirTicket() {
       if (activo.value != null) {
-        axios.post('impresora/imprimirTicket', { idTicket: listaTickets.value[activo.value]._id });
+        axios.post('impresora/imprimirTicket', { idTicket: activo.value });
       } else {
         console.log('Primero selecciona un ticket');
       }

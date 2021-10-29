@@ -131,44 +131,21 @@
                     alt="Cobrar con tarjeta" width="185">
                 </div>
             </div>
-            <div class="row mt-2">
+            <!-- <div class="row mt-2">
+              TICKET RESTAURANTE DESHABILITADO
               <div class="col text-center">
                 <img
                   data-bs-toggle="modal" data-bs-target="#exampleModal"
                   src="../assets/imagenes/img-restaurant.png"
                   alt="tkrs" width="185">
               </div>
-            </div>
+            </div> -->
             <div class="row mt-2" :class="{'datafonoEsperando': !esperando}">
               <div class="col text-center">
                 <img src="../assets/imagenes/loading.gif"
                  alt="Esperando respuesta del datáfono">
               </div>
             </div>
-              <div v-if="esVIP === true" class="row">
-                  <div class="col text-center">
-                      <button @click="cobrar('DEUDA')"
-                      class="btn btn-danger" style="font-size: 40px">
-                        CREAR ALBARÁN
-                      </button>
-                  </div>
-              </div>
-              <div v-if="esDevolucion === true" class="row">
-                  <div class="col text-center">
-                      <button @click="cobrar('DEVOLUCION')"
-                      class="btn btn-danger" style="font-size: 40px">
-                        CREAR DEVOLUCIÓN
-                      </button>
-                  </div>
-              </div>
-              <div v-if="esConsumoPersonal === true" class="row">
-                  <div class="col text-center">
-                      <button @click="cobrar('CONSUMO_PERSONAL')"
-                      class="btn btn-danger" style="font-size: 40px">
-                        CONSUMO PERSONAL
-                      </button>
-                  </div>
-              </div>
           </div>
       </div>
   </div>
@@ -325,8 +302,9 @@ export default {
 
     const cobrarVariable = computed(() => {
       if (total - totalTkrs.value <= 0) return 0;
-      return total - totalTkrs.value;
+      return (total - totalTkrs.value).toFixed(2).replace('.', ',');
     });
+
     const sobranX = computed(() => {
       if (tkrs.value) {
         if (total - totalTkrs.value) {
@@ -420,7 +398,8 @@ export default {
             //   total: Number(total),
             //   idCesta: cestaID.value,
             // });
-            socket.emit('enviarAlDatafono', { total: Number(total), idCesta: cestaID.value });
+            socket.emit('enviarAlDatafono', { total: Number(total), idCesta: cestaID.value, idClienteFinal: infoCliente });
+            setEsperando(true);
           }
 
           // toc.crearTicket(this.metodoPagoActivo, Number(vueCesta.getTotalEstatico()),
@@ -431,6 +410,22 @@ export default {
         // vueToast.abrir('danger', 'Ya existe una operación en curso');
       }
     }
+    socket.on('resDatafono', (data) => {
+      setEsperando(false);
+      if (data.error == false) {
+        store.dispatch('setModoActual', 'NORMAL');
+        store.dispatch('Clientes/resetClienteActivo');
+        store.dispatch('Footer/resetMenuActivo');
+        router.push('/');
+      } else {
+        store.dispatch('setToastAction', {
+          tipo: 'DANGER',
+          mensaje: data.mensaje,
+        });
+        store.dispatch('showToast');
+      }
+    });
+
     function test() {
       console.log('test vacío');
     }

@@ -5,11 +5,14 @@
 </template>
 <script>
 import { onMounted } from 'vue';
-import router from './router/index';
 import { tocGame } from './services/tocGame';
+import { socket } from './sockets/socket';
 
 export default {
   setup() {
+    function testsocket() {
+      socket.emit('enviarAlDatafono');
+    }
     onMounted(() => {
       tocGame.hayFichados().then((res) => {
         if (res) {
@@ -29,7 +32,10 @@ export default {
         console.log(err);
       });
       //router.push('/cobro/56');
-    });    
+    });
+    return {
+      testsocket,
+    };
   },
 }
 </script>
