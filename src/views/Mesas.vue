@@ -1,9 +1,7 @@
 <template>
     <MesasComponent />
-    <ToastComponent/>
 </template>
 <script>
-import ToastComponent from '../components/Toast.vue';
 import MesasComponent from '../components/MesasComponent.vue';
 
 export default {
@@ -13,7 +11,6 @@ export default {
   },
   components: {
     MesasComponent,
-    ToastComponent,
   },
 };
 </script>

@@ -64,10 +64,12 @@ import { computed, ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import axios from 'axios';
 import { Modal } from 'bootstrap';
+import { useToast } from 'vue-toastification';
 
 export default {
   name: 'MenuClientes',
   setup() {
+    const toast = useToast();
     const store = useStore();
     const GLOVO = store.getters['Clientes/getGlovo'];
     const DELIVEROO = store.getters['Clientes/getDeliveroo'];
@@ -82,19 +84,11 @@ export default {
          if (!res.data.error) {
             selectCliente(res.data.infoCliente);
          } else {
-            store.dispatch('setToastAction', {
-               tipo: 'DANGER',
-               mensaje: res.data.mensaje
-            });
-            store.dispatch('showToast');
+            toast.error(res.data.mensaje);
          }
       }).catch((err) => {
          console.log(err);
-         store.dispatch('setToastAction', {
-            tipo: 'DANGER',
-            mensaje: res.data.mensaje
-         });
-         store.dispatch('showToast');
+         toast.error(res.data.mensaje);
       }); 
     }
 
@@ -104,19 +98,11 @@ export default {
          if (!res.data.error) {
             selectCliente(res.data.infoCliente);
          } else {
-            store.dispatch('setToastAction', {
-               tipo: 'DANGER',
-               mensaje: res.data.mensaje
-            });
-            store.dispatch('showToast');
+            toast.error(res.data.mensaje);
          }
       }).catch((err) => {
          console.log(err);
-         store.dispatch('setToastAction', {
-            tipo: 'DANGER',
-            mensaje: res.data.mensaje
-         });
-         store.dispatch('showToast');
+         toast.error(res.data.mensaje);
       }); 
     }
 
@@ -145,26 +131,14 @@ export default {
             store.dispatch('Footer/setMenuActivo', 1);
 
             modalClientes.hide();
-            store.dispatch('setToastAction', {
-               tipo: 'SUCCESS',
-               mensaje: 'Cliente seleccionado'
-            });
-            store.dispatch('showToast');
+            toast.success('Cliente seleccionado');
          } else {
             console.log(res.data.mensaje);
-            store.dispatch('setToastAction', {
-               tipo: 'DANGER',
-               mensaje: 'Error. Comprobar consola.'
-            });
-            store.dispatch('showToast');
+            toast.error('Error. Comprobar consola');
          }
       }).catch((err) => {
          console.log(err);
-         store.dispatch('setToastAction', {
-            tipo: 'DANGER',
-            mensaje: 'Error. Comprobar consola 2.'
-         });
-         store.dispatch('showToast');
+         toast.error('Error. Comprobar consola 2');
       });
     }
 

@@ -159,14 +159,13 @@ import axios from 'axios';
 import { useStore } from 'vuex';
 
 import MenuClientes from '@/components/MenuClientes.vue'; // @ is an alias to /src
-
-import { Toast } from 'bootstrap';
-
+import { useToast } from "vue-toastification";
 import router from '../router/index';
 
 export default {
   name: 'Footer',
   setup() {
+    const toast = useToast();
     const store = useStore();
     const cesta = computed(() => store.state.Cesta.cesta);
     const activo = computed(() => store.state.Cesta.activo);
@@ -251,26 +250,14 @@ export default {
           store.dispatch('setModoActual', 'NORMAL');
           store.dispatch('Clientes/resetClienteActivo');
           store.dispatch('Footer/resetMenuActivo');
-          store.dispatch('setToastAction', {
-            tipo: 'SUCCESS',
-            mensaje: '¡Ticket en modo DEUDA creado!',
-          });
-          store.dispatch('showToast');
+          toast.success('¡Ticket en modo DEUDA creado!');
 
         } else {
-          store.dispatch('setToastAction', {
-            tipo: 'DANGER',
-            mensaje: 'Error al insertar el ticket.',
-          });
-          store.dispatch('showToast');
+          toast.error('Error al insertar el ticket');
         }
       }).catch((err) => {
         console.log(err);
-        store.dispatch('setToastAction', {
-          tipo: 'DANGER',
-          mensaje: 'Error al insertar el ticket.',
-        });
-        store.dispatch('showToast');
+        toast.error('Error al insertar el ticket');
       });
     }
 
@@ -283,25 +270,13 @@ export default {
           store.dispatch('setModoActual', 'NORMAL');
           store.dispatch('Clientes/resetClienteActivo');
           store.dispatch('Footer/resetMenuActivo');
-          store.dispatch('setToastAction', {
-            tipo: 'SUCCESS',
-            mensaje: '¡Devolución OK!.',
-          });
-          store.dispatch('showToast');
+          toast.success('¡Devolución OK!');
         } else {
-          store.dispatch('setToastAction', {
-            tipo: 'DANGER',
-            mensaje: res.data.mensaje,
-          });
-          store.dispatch('showToast');
+          toast.error(res.data.mensaje);
         }
       }).catch((err) => {
         console.log(err);
-        store.dispatch('setToastAction', {
-          tipo: 'DANGER',
-          mensaje: 'Error, no se ha podido crear la devolución.',
-        });
-        store.dispatch('showToast');
+        toast.error('Error, no se ha podido crear la devolución');
       });
     }
 
@@ -316,25 +291,13 @@ export default {
           store.dispatch('setModoActual', 'NORMAL');
           store.dispatch('Clientes/resetClienteActivo');
           store.dispatch('Footer/resetMenuActivo');
-          store.dispatch('setToastAction', {
-            tipo: 'SUCCESS',
-            mensaje: 'Consumo personal OK!.',
-          });
-          store.dispatch('showToast');
+          toast.success('¡Consumo personal OK!');
         } else {
-          store.dispatch('setToastAction', {
-            tipo: 'DANGER',
-            mensaje: 'Error al insertar el ticket.',
-          });
-          store.dispatch('showToast');
+          toast.error('Error al insertar el ticket');
         }
       }).catch((err) => {
         console.log(err);
-        store.dispatch('setToastAction', {
-          tipo: 'DANGER',
-          mensaje: 'Error al insertar el ticket..',
-        });
-        store.dispatch('showToast');
+        toast.error('Error al insertar el ticket');
       });
     }
 
@@ -369,8 +332,6 @@ export default {
       if (modoActual.value == 'DEVOLUCION' || modoActual.value == 'CLIENTE') {
         store.dispatch('Footer/setMenuActivo', 1);
       }
-      toastElList = [].slice.call(document.querySelectorAll('.toast'));
-      toastList = toastElList.map((toastEl) => new Toast(toastEl));
 
       /* INICIALIZACIÓN DE CESTA */
       axios.post('/cestas/getCesta').then((res) => {

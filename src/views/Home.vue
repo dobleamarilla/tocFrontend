@@ -3,7 +3,6 @@
     <Teclas/>
     <ModalPeso/>
     <Footer/>
-    <ToastComponent/>
   </div>
 </template>
 
@@ -12,15 +11,32 @@
 import Teclas from '@/components/Teclas.vue'; // @ is an alias to /src
 import ModalPeso from '@/components/ModalPeso.vue'; // @ is an alias to /src
 import Footer from '@/components/Footer.vue'; // @ is an alias to /src
-import ToastComponent from '@/components/Toast.vue';
+import { useStore } from 'vuex';
+import { useToast } from "vue-toastification";
 
 export default {
   name: 'Home',
+  props: {
+    tipoToast: {
+      required: false
+    },
+    mensajeToast: {
+      required: false
+    }
+  },
+  setup(props) {
+    const toast = useToast();
+    const store = useStore();
+      if (props.tipoToast != undefined && props.mensajeToast != undefined) {
+        toast(props.mensajeToast, { type: props.tipoToast })
+      }
+
+    return {};
+  },
   components: {
     Teclas,
     ModalPeso,
     Footer,
-    ToastComponent,
   },
 };
 </script>

@@ -1,7 +1,5 @@
 import { createStore } from 'vuex';
 
-import { Toast } from 'bootstrap';
-
 import InstallWizard from './modules/InstallWizard';
 
 import ModalPeso from './modules/ModalPeso';
@@ -26,8 +24,6 @@ import socket from '../sockets/socket';
 
 import Caja from './modules/Caja';
 
-let toastElList = null;
-let toastList = null;
 let timeoutBorrar = null;
 
 window.addEventListener('contextmenu', function (e) { 
@@ -39,47 +35,20 @@ export default createStore({
   state: {
     parametros: null,
     modoActual: 'NORMAL',
-    toast: {
-      tipo: 'INFO',
-      mensaje: '',
-    },
-    toastActivo: false
   },
   getters: {
     getModoActual: (state) => state.modoActual,
     getParametros: (state) => state.parametros
   },
   mutations: {
-    setToastMutation(state, payload) {
-      state.toast = payload;
-    },
     setModoActualMutation(state, payload) {
       state.modoActual = payload;
     },
     setParametrosMutation(state, payload) {
       state.parametros = payload;
     },
-    setToastActivoMutation(state, payload) {
-      state.toastActivo = payload;
-    }
   },
   actions: {
-    initToast() {
-      toastElList = [].slice.call(document.querySelectorAll('.toast'));
-      toastList = toastElList.map((toastEl) => new Toast(toastEl));
-    },
-    setToastAction({ commit }, payload) {
-      commit('setToastMutation', payload);
-    },
-    showToast({ commit }) {
-      toastList[0].show();
-      commit('setToastActivoMutation', true);
-      clearTimeout(timeoutBorrar);
-      timeoutBorrar = setTimeout(() => {  commit('setToastActivoMutation', false); }, 2500);
-    },
-    hideToast({ commit }) {
-      commit('setToastActivoMutation', false);
-    },
     setModoActual({ commit }, payload) {
       commit('setModoActualMutation', payload);
     },

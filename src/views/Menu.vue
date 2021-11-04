@@ -53,13 +53,11 @@
       <router-view></router-view>
     </div>
   </div>
-  <ToastComponent/>
 </template>
 <script>
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 import axios from 'axios';
-import ToastComponent from '@/components/Toast.vue';
 import router from '../router/index';
 import { tocGame } from '../services/tocGame';
 
@@ -123,9 +121,6 @@ export default {
       imprimirEntregas,
       goTo,
     };
-  },
-  components: {
-    ToastComponent,
   },
 };
 </script>

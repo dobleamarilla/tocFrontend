@@ -211,13 +211,14 @@ import {
   onMounted,
   watchEffect,
 } from 'vue';
-
+import { useToast } from "vue-toastification";
 import router from '../router/index';
 import { socket } from '../sockets/socket';
 
 export default {
   name: 'CobroComponent',
   setup() {
+    const toast = useToast();
     const route = useRoute();
     const store = useStore();
     const { total } = route.params;
@@ -355,16 +356,13 @@ export default {
                 store.dispatch('setModoActual', 'NORMAL');
                 store.dispatch('Clientes/resetClienteActivo');
                 store.dispatch('Footer/resetMenuActivo');
-                router.push('/');
+                router.push({ name: 'Home', params: { tipoToast: 'success', mensajeToast: 'Ticket creado' } });
               } else {
-                store.dispatch('setToastAction', {
-                  tipo: 'DANGER',
-                  mensaje: 'Error al insertar el ticket.',
-                });
-                store.dispatch('showToast');
+                toast.error('Error al insertar el ticket');
               }
             }).catch((err) => {
               console.log(err);
+              toast.error('Error');
             });
           }
 
@@ -379,16 +377,13 @@ export default {
                 store.dispatch('setModoActual', 'NORMAL');
                 store.dispatch('Clientes/resetClienteActivo');
                 store.dispatch('Footer/resetMenuActivo');
-                router.push('/');
+                router.push({ name: 'Home', params: { tipoToast: 'success', mensajeToast: 'Ticket creado' } });
               } else {
-                store.dispatch('setToastAction', {
-                  tipo: 'DANGER',
-                  mensaje: 'Error al insertar el ticket.',
-                });
-                store.dispatch('showToast');
+                toast.error('Error al insertar el ticket');
               }
             }).catch((err) => {
               console.log(err);
+              toast.error('Error');
             });
           }
 
@@ -416,13 +411,9 @@ export default {
         store.dispatch('setModoActual', 'NORMAL');
         store.dispatch('Clientes/resetClienteActivo');
         store.dispatch('Footer/resetMenuActivo');
-        router.push('/');
+        router.push({ name: 'Home', params: { tipoToast: 'success', mensajeToast: 'Ticket creado' } });
       } else {
-        store.dispatch('setToastAction', {
-          tipo: 'DANGER',
-          mensaje: data.mensaje,
-        });
-        store.dispatch('showToast');
+        toast.error(data.mensaje);
       }
     });
 

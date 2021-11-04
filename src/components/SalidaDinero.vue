@@ -38,10 +38,12 @@
 import axios from 'axios';
 import { ref, onMounted } from 'vue';
 import { Modal } from 'bootstrap';
+import { useToast } from 'vue-toastification';
 
 export default {
     name: 'SalidaDinero',
     setup() {
+        const toast = useToast();
         const cantidad = ref(0);
         const concepto = ref('Entrega Diària');
         let modalSalidaDinero = null;
@@ -56,14 +58,14 @@ export default {
                 concepto: concepto.value
             }).then((res) => {
                 if (!res.data.error) {
-                    console.log('Salida OK');
+                    toast.success('Salida OK');
                     cerrarModal();
                 } else {
-                    alert(res.data.mensaje);
+                    toast.error(res.data.mensaje);
                 }
             }).catch((err) => {
                 console.log(err);
-                alert('Error movimientos/nuevaSalida');
+                toast.error('Error movimientos/nuevaSalida');
             });
         }
 
