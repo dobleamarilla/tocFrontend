@@ -23,6 +23,11 @@ const routes = [
     component: () => import('../views/AbrirCaja.vue'),
   },
   {
+    path: '/menuTecnico',
+    name: 'Menu Técnico',
+    component: () => import('../views/MenuTecnico.vue'),
+  },
+  {
     path: '/cerrarCaja',
     name: 'Cerrar Caja',
     component: () => import('../views/CerrarCaja.vue'),

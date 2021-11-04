@@ -39,6 +39,13 @@
             <strong class="mb-1">Entregas</strong>
           </div>
         </button>
+        <router-link
+        to="/menuTecnico"
+        class="list-group-item list-group-item-action py-3 lh-tight">
+          <div class="d-flex w-100 align-items-center justify-content-between">
+            <strong class="mb-1">Técnico</strong>
+          </div>
+        </router-link>
       </div>
     </div>
     </div>
