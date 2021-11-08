@@ -94,6 +94,7 @@ export default {
             axios.post('trabajadores/fichar', { idTrabajador: trabajador.idTrabajador }).then((res) => {
                 if (!res.data.error) {
                     console.log('Trabajador fichado');
+                    // store.dispatch('Trabajadores/setTrabajadorActivo', arrayTrabajadores.value[index].nombre);
                     arrayTrabajadores.value[index].fichado = true;
                 } else {
                     console.log(res.data.mensaje);

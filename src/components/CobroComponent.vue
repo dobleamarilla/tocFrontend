@@ -356,7 +356,13 @@ export default {
                 store.dispatch('setModoActual', 'NORMAL');
                 store.dispatch('Clientes/resetClienteActivo');
                 store.dispatch('Footer/resetMenuActivo');
-                router.push({ name: 'Home', params: { tipoToast: 'success', mensajeToast: 'Ticket creado' } });
+                try {
+                  axios.post('impresora/abrirCajon');
+                } catch(err) {
+                  toast.error('No se ha podido abrir el cajón');
+                }
+                toast.success('Ticket OK');
+                router.push('/');
               } else {
                 toast.error('Error al insertar el ticket');
               }

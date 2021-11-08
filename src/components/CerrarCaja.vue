@@ -164,10 +164,12 @@ import { Modal } from 'bootstrap';
 import axios from 'axios';
 import router from '../router/index';
 import { useStore } from 'vuex';
+import { useToast } from 'vue-toastification';
 
 export default {
   name: 'AbrirCajaComponent',
   setup() {
+    const toast = useToast();
     const store = useStore();
     const cajaAbierta = computed(() => store.state.Caja.cajaAbierta);
     const infoDinero = ref([
@@ -281,13 +283,15 @@ export default {
           console.log('Cerrar caja OK');
           modalConfirmacionClausura.hide();
           store.dispatch('Caja/setEstadoCaja', false);
-          router.push('/');
+    
+          toast.success('Cierre caja OK');
+          router.push('/menu/caja');
         } else {
-          console.log('Clausura ERROR');
+          toast.error(res.data.mensaje);
         }
       }).catch((err) => {
         console.log(err);
-        alert('¡Error en la cierre! Contacta con informática.');
+        toast.error('Error en el cierre de caja. Contacta con informática');
       });
     }
 

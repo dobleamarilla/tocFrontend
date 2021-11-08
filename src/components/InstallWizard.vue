@@ -66,11 +66,13 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import router from '../router/index';
+import { useToast } from 'vue-toastification';
 // import { parametros } from '../services/parametros';
 
 export default {
   name: 'InstallWizard',
   setup() {
+    const toast = useToast();
     // const store = useStore();
     const licencia = ref('');
     const password = ref('');
@@ -124,16 +126,16 @@ export default {
             esperando.value = false;
           } else {
             esperando.value = false;
-            alert(res2.data.mensaje);
+            toast.error(res2.data.mensaje);
           }
         } else {
           esperando.value = false;
-          alert(res.data.mensaje);
+          toast.error(res.data.mensaje);
         }
       } catch(err) {
         console.log(err);
         esperando.value = false;
-        alert("Ha habido un error. Comprueba el log");
+        toast.error('Ha habido un error. Comprueba el log');
       }
     }
 

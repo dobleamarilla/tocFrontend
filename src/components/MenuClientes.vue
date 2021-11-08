@@ -106,6 +106,18 @@ export default {
       }); 
     }
 
+   function nuevoCliente() {
+      toast.info('Deshabilitado temporalmente');
+   }
+
+   function reset() {
+      store.dispatch('setModoActual', 'NORMAL');
+      store.dispatch('Clientes/resetClienteActivo');
+      store.dispatch('Footer/resetMenuActivo');
+      modalClientes.hide();
+      toast.info('Reset OK. Estado de cobro: NORMAL');
+   }
+
     function selectCliente(cliente) {
       console.log("Entro aqui");
       axios.post('clientes/comprobarVIP', { idClienteFinal: cliente.id }).then((res) => {
@@ -162,6 +174,8 @@ export default {
     });
 
     return {
+      nuevoCliente,
+      reset,
       infoPuntos,
       inputBusqueda,
       buscar,

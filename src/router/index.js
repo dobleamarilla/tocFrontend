@@ -40,6 +40,7 @@ const routes = [
     children: [
       {
         path: 'caja',
+        name:'cajaMenu',
         component: () => import('../components/Caja.vue'),
       },
       {
@@ -57,10 +58,6 @@ const routes = [
       {
         path: 'entregas',
         component: () => import('../components/Entregas.vue'),
-      },
-      {
-        path: 'menu-tecnico',
-        component: () => import('../components/MenuTecnico.vue'),
       },
     ],
   },

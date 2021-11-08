@@ -63,10 +63,26 @@ import { tocGame } from '../services/tocGame';
 
 export default {
   name: 'Menu',
-  setup() {
+  props: {
+    tipoToast: {
+      required: false
+    },
+    mensajeToast: {
+      required: false
+    }
+  },
+  setup(props) {
     const store = useStore();
     const isHidden = computed(() => store.state.Menu.hidden);
     const params = tocGame.getParametros();
+
+    if (props.tipoToast != undefined && props.mensajeToast != undefined) {
+      toast(props.mensajeToast, { type: props.tipoToast })
+      console.log('Deberían abrirse la ptm');
+    } else {
+      console.log('No están definidos. INFO TOAST');
+      console.log(props.tipoToast, props.mensajeToast);
+    }
 
     function quitarActivoTicket() {
       store.dispatch('Ticket/setActivoAction', null);

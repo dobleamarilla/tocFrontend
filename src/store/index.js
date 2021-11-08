@@ -35,10 +35,12 @@ export default createStore({
   state: {
     parametros: null,
     modoActual: 'NORMAL',
+    unidades: '0'
   },
   getters: {
     getModoActual: (state) => state.modoActual,
-    getParametros: (state) => state.parametros
+    getParametros: (state) => state.parametros,
+    getUnidades: (state) => Number(state.unidades)
   },
   mutations: {
     setModoActualMutation(state, payload) {
@@ -47,6 +49,21 @@ export default createStore({
     setParametrosMutation(state, payload) {
       state.parametros = payload;
     },
+    setUnidadesMutation(state, payload) {
+      const aux = state.unidades + payload;
+      state.unidades = `${Number(aux)}`;
+    },
+    resetUnidadesMutation(state) {
+      state.unidades = '0';
+    },
+    borrarDigitoMutation(state) {
+      const aux = state.unidades.slice(0, -1);
+      if (aux == '') {
+        state.unidades = '0'
+      } else {
+        state.unidades = aux;
+      }
+    }
   },
   actions: {
     setModoActual({ commit }, payload) {
@@ -54,6 +71,15 @@ export default createStore({
     },
     setParametros({ commit }, payload) {
       commit('setParametrosMutation', payload);
+    },
+    addDigitoUnidades({ commit }, unidades) {
+      commit('setUnidadesMutation', unidades);
+    },
+    resetUnidades({ commit }) {
+      commit('resetUnidadesMutation');
+    },
+    borrarDigitoUnidades({ commit }) {
+      commit('borrarDigitoMutation');
     }
   },
   modules: {

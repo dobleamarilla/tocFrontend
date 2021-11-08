@@ -73,10 +73,12 @@ import { useStore } from 'vuex';
 // import { Modal } from 'bootstrap';
 import axios from 'axios';
 import router from '../router/index';
+import { useToast } from 'vue-toastification';
 
 export default {
   name: 'Teclas',
   setup() {
+    const toast = useToast();
     const store = useStore();
     const cesta = computed(() => store.state.Cesta.cesta);
     const cajaAbierta = computed(() => store.state.Caja.cajaAbierta);
@@ -449,17 +451,17 @@ export default {
     }
     function clickTecla(objListadoTeclas, esAPeso = false) {
       if (!esAPeso) {
-        axios.post('cestas/setUnidadesAplicar', { unidades: unidadesAplicar }).then((res) => {
-          if (res.data.okey) {
             if (!esAPeso) { // TIPO NORMAL
               axios.post('cestas/clickTeclaArticulo', {
                 idArticulo: objListadoTeclas.idArticle,
                 idBoton: objListadoTeclas.idBoton,
                 peso: esAPeso,
                 infoPeso: null,
-                idCesta: cesta.value._id
+                idCesta: cesta.value._id,
+                unidades: (store.getters['getUnidades'] == 0) ? (1):(store.getters['getUnidades'])
               }).then((res2) => {
                 if (res2.data.error === false && res2.data.bloqueado === false) {
+                  store.dispatch('resetUnidades');
                   store.dispatch('Cesta/setCestaAction', res2.data.cesta);
                 } else {
                   console.log('Error en clickTeclaArticulo');
@@ -467,10 +469,6 @@ export default {
               });
             } else { // TIPO A PESO
             }
-          } else {
-            console.log('Error en setUnidadesAplicar');
-          }
-        });
       }
     }
     resetTeclado();
@@ -494,12 +492,11 @@ export default {
           } else {
             store.dispatch('Caja/setEstadoCaja', false);
             router.push('/abrirCaja');
-            console.log("PORQUEEEEEEEEEEEEE");
           }
         }
       }).catch((err) => {
         console.log(err);
-        alert('Error, contactar con informática');
+        toast.error('Error, contactar con informática');
       });
     });
 

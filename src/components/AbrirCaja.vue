@@ -164,10 +164,12 @@ import { Modal } from 'bootstrap';
 import axios from 'axios';
 import router from '../router/index';
 import { useStore } from 'vuex';
+import { useToast } from 'vue-toastification';
 
 export default {
   name: 'AbrirCajaComponent',
   setup() {
+    const toast = useToast();
     const store = useStore();
     const cajaAbierta = computed(() => store.state.Caja.cajaAbierta);
     const infoDinero = ref([
@@ -274,18 +276,20 @@ export default {
       axios.post('/caja/abrirCaja', {
         total: getTotal.value,
         detalle: getDetalle.value,
-        infoDinero: infoDinero.value,
+        // infoDinero: infoDinero.value,
       }).then((res) => {
         if (!res.data.error) {
           console.log('Abrir caja OK');
           modalConfirmacionApertura.hide();
           store.dispatch('Caja/setEstadoCaja', true);
+          toast.success('Abrir caja OK');
         } else {
           console.log('Apertura ERROR');
+          toast.error('Error de apertura');
         }
       }).catch((err) => {
         console.log(err);
-        alert('¡Error en la apertura! Contacta con informática.');
+        toast.error('Error en la apertura! Contacta con informática');
       });
     }
 
@@ -306,6 +310,17 @@ export default {
     onMounted(() => {
       modalConfirmacionApertura = new Modal(document.getElementById('modalConfirmacionApertura'), {
         keyboard: false,
+      });
+
+      axios.post('caja/getMonedasUltimoCierre').then((res) => {
+        if (res.data.error == false) {
+          infoDinero.value = res.data.info;
+        } else {
+          toast.error('Error: No se ha podido cargar la información');
+        }
+      }).catch((err) => {
+        console.log(err);
+        toast.error('Error: No se ha podido cargar la información del último cierre');
       });
     });
 

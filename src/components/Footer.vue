@@ -33,8 +33,9 @@
       <div class="row mt-1 ms-2" style="max-width: 220px">
         <button
         style="max-width: 106px"
-        class="btn btn-secondary botonesPrincipales btn-sm menusColorIvan"
-          @click="borrar()"><i class="bi bi-calculator display-6"></i>
+        data-bs-toggle="modal" data-bs-target="#modalUnidades"
+        class="btn btn-secondary botonesPrincipales btn-sm menusColorIvan">
+        <i class="bi bi-calculator display-6"></i>
         </button>
         <button
         style="max-width: 106px"
@@ -149,10 +150,69 @@
 
     <MenuClientes />
   </div>
+
+  <!-- Modal unidades -->
+  <div class="modal fade" id="modalUnidades" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Introduce las unidades</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col text-center ">
+              <span class="unidadesStyle">{{unidades}} uds.</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col ps-5" style="max-width: 325px;">
+                <div class="btn-group-vertical" role="group">
+                    <div class="btn-group">
+                        <a class="botonEze botonesCalculadora"
+                          @click="agregarTecla('7')">7</a>
+                        <a class="botonEze botonesCalculadora"
+                        @click="agregarTecla('8')">8</a>
+                        <a class="botonEze botonesCalculadora"
+                          @click="agregarTecla('9')">9</a>
+                    </div>
+                    <div class="btn-group">
+                        <a class="botonEze botonesCalculadora"
+                          @click="agregarTecla('4')">4</a>
+                        <a class="botonEze botonesCalculadora"
+                          @click="agregarTecla('5')">5</a>
+                        <a class="botonEze botonesCalculadora"
+                          @click="agregarTecla('6')">6</a>
+                    </div>
+                    <div class="btn-group">
+                        <a class="botonEze botonesCalculadora"
+                          @click="agregarTecla('1')">1</a>
+                        <a class="botonEze botonesCalculadora"
+                          @click="agregarTecla('2')">2</a>
+                        <a class="botonEze botonesCalculadora"
+                          @click="agregarTecla('3')">3</a>
+                    </div>
+                    <div class="btn-group">
+                        <a class="botonEze botonesCalculadora"
+                          @click="borrarDigitoUnidades()">C</a>
+                        <a class="botonEze botonesCalculadora"
+                          @click="agregarTecla('0')">0</a>
+
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="text-center">
+          <button type="button" class="btn btn-primary btn-lg" data-bs-dismiss="modal">Aceptar</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import { computed, onMounted, ref, watchEffect } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 import axios from 'axios';
 
@@ -171,6 +231,7 @@ export default {
     const activo = computed(() => store.state.Cesta.activo);
     const notificaciones = computed(() => store.state.Notificaciones.cantidad);
     const conCliente = null;
+    const unidades = computed(() => store.state.unidades);
     const trabajadorActivo = ref('');
     const arrayTrabajadores = ref([]);
     const menuActivo = computed(() => store.state.Footer.menuActivo);
@@ -178,8 +239,7 @@ export default {
     const infoCliente = computed(() => store.state.Clientes.infoCliente);
     const GLOVO = store.getters['Clientes/getGlovo'];
     const DELIVEROO = store.getters['Clientes/getDeliveroo'];
-    let toastElList = null;
-    let toastList = null;
+
     let inicioMagic = null;
     let finalMagic = null;
 
@@ -190,7 +250,7 @@ export default {
     function touchEnd() {
     	finalMagic = new Date();
       const diffTime = Math.abs(finalMagic - inicioMagic);
-      if (diffTime < 3000) {
+      if (diffTime < 2000) {
         console.log('Pulsación rápida');
       } else {
         console.log('Pulsación lenta');
@@ -198,9 +258,6 @@ export default {
       }
     }
 
-    function abrirToast() {
-      toastList[0].show();
-    }
     // const puntosClienteActivo = 0;
     const lineaDeRegalo = null;
     // var prohibirBuscarArticulos = true;
@@ -232,33 +289,43 @@ export default {
       });
     }
 
+    function buscarProducto() {
+      toast.info('Deshabilitado temporalmente');
+    }
+
     const thisIsCatalunya = computed(() => {
       return getTotal.value.replace('.', ',');
     });
 
     function crearTicketDeuda(total, idCesta, idClienteFinal, infoClienteVip) {
-      axios.post('tickets/crearTicketDeuda', {
-        total: Number(total),
-        idCesta: idCesta,
-        idCliente: idClienteFinal,
-        infoClienteVip: infoClienteVip
-      }).then((res) => {
-        if (!res.data.error) {
-          axios.post('/cestas/getCesta').then((res) => {
-            store.dispatch('Cesta/setCestaAction', res.data);
-          });
-          store.dispatch('setModoActual', 'NORMAL');
-          store.dispatch('Clientes/resetClienteActivo');
-          store.dispatch('Footer/resetMenuActivo');
-          toast.success('¡Ticket en modo DEUDA creado!');
+      if (trabajadorActivo.value != '') {
+        axios.post('tickets/crearTicketDeuda', {
+          total: Number(total),
+          idCesta: idCesta,
+          idCliente: idClienteFinal,
+          infoClienteVip: infoClienteVip
+        }).then((res) => {
+          if (!res.data.error) {
+            axios.post('/cestas/getCesta').then((res) => {
+              store.dispatch('Cesta/setCestaAction', res.data);
+            });
+            /* Ejemplo de como limpiar el estado al completo */
+            store.dispatch('setModoActual', 'NORMAL');
+            store.dispatch('Clientes/resetClienteActivo');
+            store.dispatch('Footer/resetMenuActivo');
+            /* Final del ejemplo */
+            toast.success('¡Ticket en modo DEUDA creado!');
 
-        } else {
+          } else {
+            toast.error('Error al insertar el ticket');
+          }
+        }).catch((err) => {
+          console.log(err);
           toast.error('Error al insertar el ticket');
-        }
-      }).catch((err) => {
-        console.log(err);
-        toast.error('Error al insertar el ticket');
-      });
+        });
+      } else {
+        toast.info('¡ Es necesario un trabajador/a activ@ !');
+      }
     }
 
     function crearDevolucion(total, idCesta) {
@@ -302,29 +369,41 @@ export default {
     }
 
     function goToCobrar() {
-      let pagaEnTienda = store.getters['Clientes/getClientePagaEnTienda'];
-      let modoActual = store.getters['getModoActual'];
-      let infoClienteVip = store.getters['Clientes/getInfoClienteVip'];
-      let idClienteFinal = store.getters['Clientes/getInfoCliente'];
-      let idCesta = store.getters['Cesta/getCestaId'];
-      
-      /* Si se cumple que es VIP y no paga en tienda, se crea la deuda, sino, cobro normal */
-      if ((pagaEnTienda == true && modoActual != 'DEVOLUCION' && modoActual != 'CONSUMO PERSONAL') || (modoActual == 'CLIENTE')) {
-        router.push(`/cobro/${getTotal.value}`);
-      } else if(modoActual == 'VIP' && pagaEnTienda == false) {
-        crearTicketDeuda(Number(getTotal.value), idCesta, idClienteFinal, infoClienteVip);
-      }
-      if (modoActual == 'DEVOLUCION') {
-        crearDevolucion(Number(getTotal.value), idCesta);
-      }
+      if (trabajadorActivo.value != '') {
+        let pagaEnTienda = store.getters['Clientes/getClientePagaEnTienda'];
+        let modoActual = store.getters['getModoActual'];
+        let infoClienteVip = store.getters['Clientes/getInfoClienteVip'];
+        let idClienteFinal = store.getters['Clientes/getInfoCliente'];
+        let idCesta = store.getters['Cesta/getCestaId'];
+        
+        /* Si se cumple que es VIP y no paga en tienda, se crea la deuda, sino, cobro normal */
+        if ((pagaEnTienda == true && modoActual != 'DEVOLUCION' && modoActual != 'CONSUMO PERSONAL') || (modoActual == 'CLIENTE')) {
+          router.push(`/cobro/${getTotal.value}`);
+        } else if(modoActual == 'VIP' && pagaEnTienda == false) {
+          crearTicketDeuda(Number(getTotal.value), idCesta, idClienteFinal, infoClienteVip);
+        }
+        if (modoActual == 'DEVOLUCION') {
+          crearDevolucion(Number(getTotal.value), idCesta);
+        }
 
-      if (modoActual == 'CONSUMO PERSONAL') {
-        crearConsumoPersonal(idCesta);
+        if (modoActual == 'CONSUMO PERSONAL') {
+          crearConsumoPersonal(idCesta);
+        }
+      } else {
+        toast.info('¡ Es necesario un trabajador/a activ@ !');
       }
     }
 
     function cambiarMenu() {
       (menuActivo.value === 1) ? (store.dispatch('Footer/setMenuActivo', 0)) : (store.dispatch('Footer/setMenuActivo', menuActivo.value + 1))
+    }
+
+    function agregarTecla(tecla) {
+      store.dispatch('addDigitoUnidades', tecla);
+    }
+
+    function borrarDigitoUnidades() {
+      store.dispatch('borrarDigitoUnidades');
     }
 
     onMounted(() => {
@@ -335,6 +414,7 @@ export default {
 
       /* INICIALIZACIÓN DE CESTA */
       axios.post('/cestas/getCesta').then((res) => {
+        console.log(res.data);
         store.dispatch('Cesta/setCestaAction', res.data);
       });
 
@@ -414,6 +494,10 @@ export default {
     }
 
     return {
+      agregarTecla,
+      borrarDigitoUnidades,
+      unidades,
+      buscarProducto,
       GLOVO,
       DELIVEROO,
       thisIsCatalunya,
@@ -436,7 +520,6 @@ export default {
       trabajadorActivo,
       arrayTrabajadores,
       cambioActivo,
-      abrirToast,
       goToCobrar,
     };
   },
@@ -552,6 +635,18 @@ export default {
 .estiloConsumoPersonal {
   color: #c95907;
   font-size: 40px;
+  font-weight: bold;
+}
+
+.botonesCalculadora {
+  background-color: #fff5e9;
+  color: #c95907;
+  border-width: 3px;
+  border: 1px solid #bf5c18;
+}
+
+.unidadesStyle {
+  font-size: 44px;
   font-weight: bold;
 }
 </style>
