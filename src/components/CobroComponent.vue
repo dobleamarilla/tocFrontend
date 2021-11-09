@@ -237,7 +237,7 @@ export default {
     const totalTkrs = ref(0);
     const cuenta = ref(0);
     const arrayFichados = ref([]);
-    const esperando = ref(false);
+    const esperando = computed(() => store.state.esperandoDatafono); // ref(false);
     /* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
     const cestaID = computed(() => store.state.Cesta.cesta._id);
     function reset() {
@@ -334,7 +334,7 @@ export default {
     });
 
     function setEsperando(payload) {
-      esperando.value = payload;
+      store.dispatch('setEsperandoDatafono', payload);
     }
 
     function cobrar() {
@@ -411,17 +411,6 @@ export default {
         // vueToast.abrir('danger', 'Ya existe una operación en curso');
       }
     }
-    socket.on('resDatafono', (data) => {
-      setEsperando(false);
-      if (data.error == false) {
-        store.dispatch('setModoActual', 'NORMAL');
-        store.dispatch('Clientes/resetClienteActivo');
-        store.dispatch('Footer/resetMenuActivo');
-        router.push({ name: 'Home', params: { tipoToast: 'success', mensajeToast: 'Ticket creado' } });
-      } else {
-        toast.error(data.mensaje);
-      }
-    });
 
     function test() {
       console.log('test vacío');

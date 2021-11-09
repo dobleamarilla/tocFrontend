@@ -35,14 +35,19 @@ export default createStore({
   state: {
     parametros: null,
     modoActual: 'NORMAL',
-    unidades: '0'
+    unidades: '0',
+    esperandoDatafono: false
   },
   getters: {
     getModoActual: (state) => state.modoActual,
     getParametros: (state) => state.parametros,
-    getUnidades: (state) => Number(state.unidades)
+    getUnidades: (state) => Number(state.unidades),
+    getEsperandoDatafono: (state) => state.esperandoDatafono
   },
   mutations: {
+    setEsperandoDatafonoMutation(state, payload) {
+      state.esperandoDatafono = payload;
+    },
     setModoActualMutation(state, payload) {
       state.modoActual = payload;
     },
@@ -66,6 +71,9 @@ export default createStore({
     }
   },
   actions: {
+    setEsperandoDatafono({ commit }, payload) {
+      commit('setEsperandoDatafonoMutation', payload);
+    },
     setModoActual({ commit }, payload) {
       commit('setModoActualMutation', payload);
     },
