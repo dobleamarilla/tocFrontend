@@ -314,7 +314,10 @@ export default {
 
       axios.post('caja/getMonedasUltimoCierre').then((res) => {
         if (res.data.error == false) {
-          infoDinero.value = res.data.info;
+          if (res.data.info != null) {
+            infoDinero.value = res.data.info;
+          }
+          
         } else {
           toast.error('Error: No se ha podido cargar la información');
         }

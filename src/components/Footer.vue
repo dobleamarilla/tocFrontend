@@ -61,7 +61,7 @@
       <p v-if="modoActual == 'DEVOLUCION'" class="tipoDevolucion">{{modoActual}}</p>
       <p v-if="modoActual == 'NORMAL'" class="tipoNormal">{{modoActual}}</p>
       <p v-if="modoActual == 'CLIENTE'" class="infoCliente">
-        4676 puntos
+        {{infoCliente.puntos}} puntos
       </p>
       <p v-if="modoActual == 'CLIENTE'" class="infoCliente">
         {{infoCliente.nombre}}
@@ -99,6 +99,7 @@
                 <th scope="col">Productos</th>
                 <th scope="col">Unidades</th>
                 <th scope="col">Precio</th>
+                <th v-if="infoCliente.puntos > 0" scope="col">Regalo</th>
               </tr>
             </thead>
             <tbody class="tableBody" :style="conCliente">
@@ -107,16 +108,12 @@
               v-bind:class="{
                 'estiloPromo': item.promocion.esPromo,
                 'seleccionado': activo === index
-              }"
-              @click="setActivo(index)">
-                <td v-if="sePuedeRegalar(item.subtotal, item.promocion.esPromo)">
-                  {{item.nombre}} <img @click="regalar(index)"
-                  src="../assets/imagenes/regalo.png"
-                  alt="Regalar">
-                </td>
-                <td v-else>{{item.nombre}}</td>
-                <td>{{item.unidades}}</td>
-                <td>{{item.subtotal.toFixed(2)}}</td>
+              }">
+                <td @click="setActivo(index)">{{item.nombre}}</td>
+                <td @click="setActivo(index)">{{item.unidades}}</td>
+                <td @click="setActivo(index)">{{item.subtotal.toFixed(2)}}</td>
+                <td v-if="infoCliente.puntos > 0 && item.promocion.esPromo == false && sePuedeRegalar(item.subtotal)"><img @click="regalar(index)" src="../assets/gift.png" alt="Regalo"></td>
+                <td v-if="infoCliente.puntos > 0 && (!sePuedeRegalar(item.subtotal) || (item.promocion.esPromo == true))"><img src="../assets/x.svg" width="30" alt="No se puede regalar"></td>
               </tr>
             </tbody>
           </table>
@@ -256,6 +253,27 @@ export default {
         console.log('Pulsación lenta');
         router.go('/');
       }
+    }
+
+    function regalar(index) {
+      axios.post('cestas/regalarProducto', { idCesta: store.getters['Cesta/getCestaId'], index: (index - (cesta.value.lista.length -1))*-1 }).then((res) => {
+        if (res.data.error == false) {
+          store.dispatch('Cesta/setCestaAction', res.data.cesta);
+        } else {
+          toast.error(res.data.mensaje);
+        }
+      }).catch((err) => {
+        console.log(err);
+        toast.error('Error, no se ha podido modificar la cesta para regalo');
+      });
+      // cesta.value.lista[index].subtotal = 0;
+    }
+
+    function sePuedeRegalar(precio) {
+      if (Math.trunc(infoCliente.value.puntos*0.03*0.02) >= precio) {
+        return true;
+      }
+      return false;
     }
 
     // const puntosClienteActivo = 0;
@@ -444,22 +462,6 @@ export default {
       });
     });
 
-    function sePuedeRegalar(subtotal, esPromo) {
-      if (subtotal > 0 && esPromo === true) { // Caso para que compile
-
-      }
-      return false;
-      // if (!esPromo) {
-      //   axios.post('convertirPuntosEnDinero', { puntosClienteActivo }).then((dinero) => {
-      //     // Aquí debe ir el nuevo método
-      //   });
-      //   if (subtotal <= dinero) {
-      //     return true;
-      //   }
-      //   return false;
-      // }
-      // return false;
-    }
     function setActivo(index) {
       console.log(index);
       store.dispatch('Cesta/setActivoAction', index);
@@ -494,6 +496,7 @@ export default {
     }
 
     return {
+      regalar,
       agregarTecla,
       borrarDigitoUnidades,
       unidades,

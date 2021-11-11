@@ -12,8 +12,12 @@ socket.on('resDatafono', (data) => {
     console.log(data);
 });
 
-socket.on('test', (data) => {
-    console.log(data);
+socket.on('resConsultaPuntos', (data) => {
+  if (data.error == false) {
+    toast.info(`Puntos del cliente: ${data.info}`);
+  } else {
+    toast.error(data.mensaje);
+  }
 });
 
 socket.on('resDatafono', (data) => {

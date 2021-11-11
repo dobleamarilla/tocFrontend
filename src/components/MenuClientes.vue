@@ -42,11 +42,6 @@
                                      href="#" class="btn btn-primary btn-lg" style="width: 150px">
                                         Seleccionar
                                     </button>
-                                    <button
-                                     @click="infoPuntos(cliente.id)"
-                                     href="#" class="btn btn-info ms-2 btn-lg" style="width: 170px">
-                                        Info. puntos
-                                    </button>
                                  </td>
                               </tr>
                            </tbody>
@@ -65,6 +60,7 @@ import { useStore } from 'vuex';
 import axios from 'axios';
 import { Modal } from 'bootstrap';
 import { useToast } from 'vue-toastification';
+import { socket } from '../sockets/socket';
 
 export default {
   name: 'MenuClientes',
@@ -119,12 +115,8 @@ export default {
    }
 
     function selectCliente(cliente) {
-      console.log("Entro aqui");
       axios.post('clientes/comprobarVIP', { idClienteFinal: cliente.id }).then((res) => {
-         console.log("Lol ", res.data);
          if (res.data.error === false) {
-            console.log('Será esta: ', res.data.info);
-
             /* SET PAGA EN TIENDA */
             if (res.data.info.pagaEnTienda == false) {
                cliente['pagaEnTienda'] = false;
@@ -135,6 +127,7 @@ export default {
                store.dispatch('Clientes/setInfoClienteVip', res.data.info.datosCliente);
                store.dispatch('setModoActual', 'VIP');
             } else {
+               cliente['puntos'] = res.data.info.puntos;
                store.dispatch('setModoActual', 'CLIENTE');
             }
 
@@ -164,7 +157,7 @@ export default {
     }
 
     function infoPuntos(id) {
-       console.log('Mostrar puntos del cliente: ', id);
+      socket.emit('consultarPuntos', { idClienteFinal: id });
     }
 
     onMounted(() => {
