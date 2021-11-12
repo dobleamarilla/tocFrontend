@@ -112,8 +112,8 @@
                 <td @click="setActivo(index)">{{item.nombre}}</td>
                 <td @click="setActivo(index)">{{item.unidades}}</td>
                 <td @click="setActivo(index)">{{item.subtotal.toFixed(2)}}</td>
-                <td v-if="infoCliente.puntos > 0 && item.promocion.esPromo == false && sePuedeRegalar(item.subtotal)"><img @click="regalar(index)" src="../assets/gift.png" alt="Regalo"></td>
-                <td v-if="infoCliente.puntos > 0 && (!sePuedeRegalar(item.subtotal) || (item.promocion.esPromo == true))"><img src="../assets/x.svg" width="30" alt="No se puede regalar"></td>
+                <td v-if="infoCliente.puntos > 0 && item.promocion.esPromo == false && sePuedeRegalar(item.subtotal, item._id)"><img @click="regalar(index)" src="../assets/gift.png" alt="Regalo"></td>
+                <td v-if="infoCliente.puntos > 0 && (!sePuedeRegalar(item.subtotal, item._id) || (item.promocion.esPromo == true))"><img src="../assets/x.svg" width="30" alt="No se puede regalar"></td>
               </tr>
             </tbody>
           </table>
@@ -269,9 +269,21 @@ export default {
       // cesta.value.lista[index].subtotal = 0;
     }
 
-    function sePuedeRegalar(precio) {
+    function productoRegalable(idArticulo) {
+      const arrayRegalables = [1098, 4631, 312, 99, 77, 73, 75];
+      for (let i = 0; i < arrayRegalables.length; i++) {
+        if (arrayRegalables[i] == idArticulo) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function sePuedeRegalar(precio, idArticulo) {
       if (Math.trunc(infoCliente.value.puntos*0.03*0.02) >= precio) {
-        return true;
+        if (productoRegalable(idArticulo)) {
+          return true;
+        }
       }
       return false;
     }
