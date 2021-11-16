@@ -110,8 +110,12 @@ export default {
       store.dispatch('setModoActual', 'NORMAL');
       store.dispatch('Clientes/resetClienteActivo');
       store.dispatch('Footer/resetMenuActivo');
-      modalClientes.hide();
-      toast.info('Reset OK. Estado de cobro: NORMAL');
+      axios.post('articulos/setEstadoTarifaVIP', { nuevoEstado: false }).then((res) => {
+         modalClientes.hide();
+         toast.info('Reset OK. Estado de cobro: NORMAL');
+      }).catch((err) => {
+         console.log(err);
+      });
    }
 
     function selectCliente(cliente) {

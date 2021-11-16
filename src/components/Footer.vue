@@ -251,6 +251,15 @@ export default {
         console.log('Pulsación rápida');
       } else {
         console.log('Pulsación lenta');
+        store.dispatch('setModoActual', 'NORMAL');
+        store.dispatch('Clientes/resetClienteActivo');
+        store.dispatch('Footer/resetMenuActivo');
+        axios.post('articulos/setEstadoTarifaVIP', { nuevoEstado: false }).then((res) => {
+          modalClientes.hide();
+          toast.info('Reset OK. Estado de cobro: NORMAL');
+        }).catch((err) => {
+          console.log(err);
+        });
         router.go('/');
       }
     }
